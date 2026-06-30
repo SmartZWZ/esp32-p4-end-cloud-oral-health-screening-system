@@ -1,0 +1,28 @@
+dependencies:
+  idf:
+    version: ">=6.0"
+  lvgl/lvgl:
+    version: "^9.*"
+    public: true
+  esp_video:
+    version: ">=2.2,<3.0"
+    public: true
+  waveshare/esp32_p4_platform:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp32_p4_platform"
+    public: true
+  waveshare/esp_lcd_dsi:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp_lcd_dsi"
+  waveshare/esp_lcd_hx8394:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp_lcd_hx8394"
+  waveshare/esp_lcd_ili9881c:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp_lcd_ili9881c"
+  waveshare/esp_lcd_jd9365:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp_lcd_jd9365"
+  waveshare/esp_lcd_ota7290b:
+    version: "*"
+    override_path: "../../esp32-p4-platform/examples/esp-idf/16_video_lcd_display/managed_components/waveshare__esp_lcd_ota7290b"

@@ -1,0 +1,4 @@
+# ESP32-P4-Module-DEV-KIT v1.3 / ESP32-P4 pre-v3 engineering sample profile.
+# Keep this separate from sdkconfig.defaults so the chip revision choice stays explicit.
+CONFIG_ESP32P4_SELECTS_REV_LESS_V3=y
+CONFIG_ESP32P4_REV_MIN_1=y
