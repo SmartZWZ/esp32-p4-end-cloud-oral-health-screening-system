@@ -1,0 +1,18 @@
+[Unit]
+Description=ESP32 video and image preview service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/esp32-preview
+ExecStart=/usr/bin/node /opt/esp32-preview/server.js
+Restart=always
+RestartSec=2
+Environment=HOST=0.0.0.0
+Environment=WS_PORT=8888
+Environment=HTTP_PORT=8889
+Environment=MAX_FRAME_BYTES=8388608
+
+[Install]
+WantedBy=multi-user.target
