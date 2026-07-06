@@ -54,6 +54,8 @@ ai/models/*
 !ai/models/README.md
 *.onnx
 *.pt
+!ai/models/cloud_fine_det_best.pt
+!ai/models/edge_risk_best.pt
 *.pth
 *.tflite
 *.bin
