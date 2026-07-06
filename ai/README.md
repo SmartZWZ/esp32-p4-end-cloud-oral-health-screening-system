@@ -256,3 +256,87 @@ POST https://yolo.chijing.xyz:2437/api/v1/yolo/image?conf=0.25&imgsz=640
 4. 读取返回的 `detections`。
 
 5. 在屏幕上把 `box_xyxy` 映射到当前显示分辨率，叠加风险框。
+
+## 8. Voice Control API
+
+用途：ESP32-P4 麦克风录音后，把音频上传到云端。云端先调用 ASR 得到文字，再用 Qwen/规则解析成固定设备指令，最后返回给单片机执行。
+
+接口：
+
+```text
+POST https://api.chijing.xyz:2437/api/v1/voice/commands
+POST http://api.chijing.xyz:1437/api/v1/voice/commands
+```
+
+健康检查：
+
+```text
+GET https://api.chijing.xyz:2437/api/v1/voice/health
+```
+
+请求格式：`multipart/form-data`
+
+字段：
+
+- `file`: 必填，录音文件，建议先用 `wav`、`mp3`、`m4a`、`opus` 或 `pcm`。
+- `device_sn`: 可选，设备序列号。
+- `language`: 可选，默认 `zh`。
+- `asr_text`: 可选，仅调试用；传了这个字段时服务器会跳过 ASR，直接解析文字。
+
+请求示例：
+
+```bash
+curl -X POST \
+  -F "device_sn=esp32-p4-001" \
+  -F "language=zh" \
+  -F "file=@command.wav;type=audio/wav" \
+  "https://api.chijing.xyz:2437/api/v1/voice/commands"
+```
+
+调试示例：
+
+```bash
+curl -X POST \
+  -F "asr_text=拍照" \
+  -F "file=@command.wav;type=audio/wav" \
+  "https://api.chijing.xyz:2437/api/v1/voice/commands"
+```
+
+返回示例：
+
+```json
+{
+  "ok": true,
+  "status": "ok",
+  "command": "take_photo",
+  "text": "拍照",
+  "confidence": 0.9,
+  "reason": "Matched photo capture keywords.",
+  "source": "rule",
+  "asr_configured": false,
+  "llm_used": false,
+  "audio_url": "/uploads/voice/xxx.wav",
+  "device_sn": "esp32-p4-001",
+  "raw": {
+    "asr": null,
+    "llm": null
+  }
+}
+```
+
+单片机只需要读取 `command` 字段：
+
+```text
+take_photo            拍照
+start_edge_detection  开始端侧检测
+stop_edge_detection   停止端侧检测
+start_camera          打开摄像头
+stop_camera           关闭摄像头
+noop                  没有明确动作，不执行
+```
+
+说明：
+
+- 服务器目前已经支持接口、音频保存、ASR 转写接入点、Qwen/OpenAI-compatible LLM 接入点和关键词兜底解析。
+- Qwen3-3.5B 适合做“文字 -> 指令”的解析；语音转文字建议仍使用 ASR API 或本地 Whisper/faster-whisper。
+- 如果服务器没有配置 ASR，真实音频会被保存，返回 `status=asr_unconfigured` 和 `command=noop`；联调时可以先传 `asr_text` 验证固件动作。

@@ -110,3 +110,18 @@ class ReportRead(BaseModel):
     suggestions: list[str]
     structured_result: dict[str, Any] | None
     created_at: datetime
+
+
+class VoiceCommandRead(BaseModel):
+    ok: bool
+    status: str
+    command: str
+    text: str
+    confidence: float
+    reason: str
+    source: str
+    asr_configured: bool
+    llm_used: bool
+    audio_url: str | None = None
+    device_sn: str | None = None
+    raw: dict[str, Any] | None = None
