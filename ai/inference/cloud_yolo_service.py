@@ -133,4 +133,3 @@ async def predict_video_frame(
     data = await read_image_bytes(request, file)
     image = decode_image(data)
     return run_prediction(image, conf, imgsz)
-
