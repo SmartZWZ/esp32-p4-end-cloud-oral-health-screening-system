@@ -1,0 +1,16 @@
+[Unit]
+Description=Tooth YOLO inference service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/tooth-yolo
+Environment=YOLO_MODEL_PATH=/opt/tooth-yolo/models/cloud_fine_det_best.pt
+Environment=YOLO_CONF=0.25
+Environment=YOLO_IMGSZ=640
+ExecStart=/root/miniconda3/envs/yolo-torch/bin/uvicorn cloud_yolo_service:app --host 0.0.0.0 --port 8010
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
