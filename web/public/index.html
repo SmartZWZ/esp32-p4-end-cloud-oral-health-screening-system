@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>口腔筛查云端监控</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">T</div>
+        <div>
+          <div class="brand-title">Tooth Cloud</div>
+          <div class="brand-subtitle">Oral Screening</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" type="button" title="实时监控">
+          <span class="nav-icon">◈</span>
+          <span>实时监控</span>
+        </button>
+        <button class="nav-item" type="button" title="筛查报告" disabled>
+          <span class="nav-icon">▦</span>
+          <span>筛查报告</span>
+        </button>
+        <button class="nav-item" type="button" title="设备管理" disabled>
+          <span class="nav-icon">⌁</span>
+          <span>设备管理</span>
+        </button>
+        <button class="nav-item" type="button" title="模型服务" disabled>
+          <span class="nav-icon">◎</span>
+          <span>模型服务</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-dot" id="overallDot"></div>
+        <div>
+          <div class="footer-title" id="overallStatus">连接中</div>
+          <div class="footer-subtitle">user.chijing.xyz</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>单片机镜头实时监控</h1>
+          <p>视频流、拍照帧、视频抽帧检测和照片检测。</p>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="refreshButton" type="button" title="刷新连接">↻</button>
+          <button class="text-button" id="detectPhotoButton" type="button">检测最新照片</button>
+        </div>
+      </header>
+
+      <section class="metrics">
+        <div class="metric">
+          <span>视频帧</span>
+          <strong id="videoFrames">0</strong>
+        </div>
+        <div class="metric">
+          <span>照片数</span>
+          <strong id="photoFrames">0</strong>
+        </div>
+        <div class="metric">
+          <span>视频检测</span>
+          <strong id="videoDetections">0</strong>
+        </div>
+        <div class="metric">
+          <span>照片检测</span>
+          <strong id="photoDetections">0</strong>
+        </div>
+      </section>
+
+      <section class="monitor-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>原始视频</h2>
+              <p id="rawVideoMeta">等待 ESP32 视频帧</p>
+            </div>
+            <span class="pill" id="rawVideoState">待连接</span>
+          </div>
+          <div class="viewport">
+            <img id="rawVideo" alt="原始视频帧" />
+            <div class="empty" id="rawVideoEmpty">暂无视频帧</div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>单片机拍照</h2>
+              <p id="photoMeta">等待 POST 图片</p>
+            </div>
+            <span class="pill" id="photoState">待上传</span>
+          </div>
+          <div class="viewport">
+            <img id="photoImage" alt="单片机拍照" />
+            <div class="empty" id="photoEmpty">暂无照片</div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>检测视频</h2>
+              <p id="videoDetectMeta">每 2 秒抽帧检测</p>
+            </div>
+            <span class="pill" id="videoDetectState">待检测</span>
+          </div>
+          <div class="viewport">
+            <canvas id="videoCanvas"></canvas>
+            <div class="empty" id="videoCanvasEmpty">等待视频检测结果</div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>照片检测</h2>
+              <p id="photoDetectMeta">最新照片 YOLO 检测</p>
+            </div>
+            <span class="pill" id="photoDetectState">待检测</span>
+          </div>
+          <div class="viewport">
+            <canvas id="photoCanvas"></canvas>
+            <div class="empty" id="photoCanvasEmpty">等待照片检测结果</div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
