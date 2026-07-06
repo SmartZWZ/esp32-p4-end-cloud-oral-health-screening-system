@@ -52,6 +52,7 @@ ai/datasets/*
 !ai/datasets/.gitkeep
 ai/models/*
 !ai/models/README.md
+!ai/models/edge_risk_yolo11n_320_int8.espdl
 *.onnx
 *.pt
 !ai/models/cloud_fine_det_best.pt
@@ -60,6 +61,7 @@ ai/models/*
 *.tflite
 *.bin
 *.espdl
+!ai/models/edge_risk_yolo11n_320_int8.espdl
 outputs/*.info
 outputs/*.json
 ai/models/*.info
