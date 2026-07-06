@@ -59,6 +59,11 @@ ai/models/*
 *.pth
 *.tflite
 *.bin
+*.espdl
+outputs/*.info
+outputs/*.json
+ai/models/*.info
+ai/models/*.json
 
 # Generated reports/artifacts
 reports/generated/
