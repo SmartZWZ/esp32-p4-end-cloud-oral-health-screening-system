@@ -39,6 +39,8 @@ env/
 .env
 .env.*
 !.env.example
+*.db
+backend/storage/
 
 # ESP-IDF/Firmware
 firmware/**/build/
@@ -59,4 +61,3 @@ ai/models/*
 # Generated reports/artifacts
 reports/generated/
 outputs/
-
