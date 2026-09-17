@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-page="detections" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>影像管理 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/members.css">
+  <link rel="stylesheet" href="assets/css/image-preview.css">
+  <link rel="stylesheet" href="assets/css/model-results.css">
+  <link rel="stylesheet" href="assets/css/image-upload.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a class="active" href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+  <main class="app-main">
+    <section class="page-head">
+      <div><p class="kicker">FAMILY IMAGE ARCHIVE</p><h1>影像管理</h1></div>
+      <div class="page-actions"><button id="open-local-upload" class="button button-fill" type="button">本地上传</button><a class="button button-plain" href="ai-dentist.html">AI牙医分析</a><a id="open-model-tool" class="button button-plain" href="model-lab.html">模型处理</a><button id="refresh-records" class="button button-plain">刷新记录</button></div>
+    </section>
+    <p id="local-upload-page-message" class="local-upload-page-message" role="status" aria-live="polite"></p>
+    <section class="record-toolbar" aria-label="影像筛选">
+      <label>查看成员<select id="record-member-filter"><option value="">全部成员</option></select></label>
+      <label>图片类型<select id="record-mode-filter"><option value="">全部图片</option><option value="archive">上传保存</option><option value="detect">云端检测</option></select></label>
+      <p>“上传保存”不会自动调用模型；选择图片后可随时发起云端分析。两类图片均可查看与编辑、下载或删除。</p>
+    </section>
+    <section class="paper-block">
+      <div class="block-head"><p>按时间倒序</p><span id="record-total">—</span></div>
+      <div id="record-list" class="record-list"><p>正在读取影像记录…</p></div>
+    </section>
+    <p class="medical-note">图片仅可由当前账户读取，并按家庭成员归档。删除操作会同时删除云端图片与其检测结果，且不可恢复。</p>
+  </main>
+  <dialog id="image-preview-dialog" class="modal image-preview-dialog">
+    <section>
+      <div class="preview-head"><div><p class="panel-index">IMAGE RESULT</p><h2 id="image-preview-title">影像结果</h2></div><button id="close-image-preview" class="text-button" type="button">关闭</button></div>
+      <p id="image-preview-announcement" class="preview-announcement" role="status" aria-live="assertive" hidden></p>
+      <div class="preview-tools" aria-label="图片缩放工具">
+        <span class="preview-tools-label">缩放查看</span>
+        <div class="preview-zoom-controls">
+          <button type="button" class="preview-zoom-button" data-preview-zoom="out" aria-label="缩小图片">−</button>
+          <output id="image-preview-zoom-value" aria-live="polite">100%</output>
+          <button type="button" class="preview-zoom-button" data-preview-zoom="in" aria-label="放大图片">＋</button>
+          <input id="image-preview-zoom-range" class="preview-zoom-range" type="range" min="100" max="800" value="100" step="1" aria-label="图片缩放比例">
+          <button type="button" class="preview-fit-button" data-preview-zoom="fit">适应</button>
+        </div>
+      </div>
+      <div id="image-preview-viewport" class="image-preview-viewport" tabindex="0" aria-label="口腔影像，可使用鼠标滚轮缩放并拖动查看">
+        <div id="image-preview-stage" class="image-preview-stage">
+          <img id="image-preview-image" class="image-preview-image" alt="口腔影像预览">
+          <canvas id="image-preview-overlay" class="image-preview-overlay" aria-label="模型检测标注"></canvas>
+        </div>
+      </div>
+      <p class="preview-gesture-hint">滚轮缩放 · 拖动查看细节 · 双击切换缩放 · 手机可双指缩放</p>
+      <p id="image-preview-meta" class="preview-meta"></p>
+      <p id="image-preview-result" class="preview-result"></p>
+      <div class="modal-actions"><a id="image-preview-download" class="button button-plain" href="#">下载原图</a><a id="image-preview-edit" class="button button-plain" href="image-editor.html">查看与编辑</a><button id="image-preview-close-bottom" class="button button-fill" type="button">完成</button></div>
+    </section>
+  </dialog>
+  <dialog id="local-upload-dialog" class="modal local-upload-dialog">
+    <form id="local-upload-form" enctype="multipart/form-data">
+      <div class="local-upload-head">
+        <div><p class="panel-index">LOCAL IMAGE INTAKE</p><h2>上传本地影像</h2></div>
+        <button class="text-button local-upload-close" type="button">关闭</button>
+      </div>
+      <div class="local-upload-layout">
+        <div class="local-upload-intake">
+          <input id="local-upload-file" class="local-upload-file" name="file" type="file" accept="image/jpeg,image/png,image/webp" required>
+          <label id="local-upload-drop" class="local-upload-drop" for="local-upload-file" tabindex="0">
+            <span id="local-upload-empty" class="local-upload-empty"><i aria-hidden="true"></i><strong>选择或拖入一张口腔照片</strong><span>支持 JPEG、PNG、WebP，单张不超过 8 MB</span></span>
+            <img id="local-upload-preview" class="local-upload-preview" alt="待上传图片预览" hidden>
+            <span id="local-upload-file-meta" class="local-upload-file-meta" hidden><span>—</span><span>—</span></span>
+          </label>
+        </div>
+        <div class="local-upload-settings">
+          <label>归属成员<select id="local-upload-member" name="member_id" required><option value="">请选择成员</option></select></label>
+          <fieldset class="local-upload-mode">
+            <legend>上传后执行</legend>
+            <label><input type="radio" name="upload_mode" value="archive" checked><span><strong>仅上传保存</strong><small>归档原图，不自动运行模型</small></span></label>
+            <label><input type="radio" name="upload_mode" value="detect"><span><strong>上传并分析</strong><small>保存后立即进入本地模型队列</small></span></label>
+          </fieldset>
+          <label id="local-upload-pipeline" class="local-upload-pipeline" hidden>分析模型<select name="model_pipeline"><option value="caries">龋齿候选检测</option><option value="both">综合检测</option><option value="dental_seg" selected>口腔四类分割</option><option value="calculus_seg">牙结石分割</option><option value="tooth_outline">牙齿轮廓与浅龋暗线</option><option value="all_models">全部模型联合分析</option></select></label>
+          <p class="local-upload-security">图片按当前账号与家庭成员隔离保存。上传代码包不会覆盖这里的历史影像。</p>
+        </div>
+      </div>
+      <p id="local-upload-message" class="local-upload-message" role="status" aria-live="polite"></p>
+      <div class="modal-actions"><button class="button button-plain local-upload-reset" type="button">重新选择</button><div><button class="button button-plain local-upload-close" type="button">取消</button><button id="local-upload-submit" class="button button-fill" type="submit">上传影像</button></div></div>
+    </form>
+  </dialog>
+  <script src="assets/js/app.js?v=20260815-editor-v1"></script>
+</body>
+</html>

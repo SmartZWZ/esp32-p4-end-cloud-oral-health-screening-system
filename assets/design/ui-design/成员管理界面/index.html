@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Member Management</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="member-screen" aria-label="DentiScope member management">
+      <header class="screen-header">
+        <a class="back-control" href="../整个系统界面/03_home/index.html" aria-label="Back to home">
+          <img src="assets/back.svg" alt="" />
+        </a>
+        <div>
+          <p class="eyebrow">DENTISCOPE</p>
+          <h1>MEMBER MANAGEMENT</h1>
+        </div>
+      </header>
+
+      <section id="member-list" class="member-list" aria-labelledby="member-count">
+        <p id="member-count" class="section-label">3 MEMBERS</p>
+        <article class="member-row">
+          <span class="member-avatar">AC</span>
+          <p>ALEX CHEN</p>
+          <div class="row-actions">
+            <a class="icon-button" href="#edit-member-dialog" aria-label="Edit Alex Chen"><img src="assets/edit.svg" alt="" /></a>
+            <button class="icon-button" type="button" aria-label="Delete Alex Chen"><img src="assets/delete.svg" alt="" /></button>
+          </div>
+        </article>
+        <article class="member-row">
+          <span class="member-avatar">JL</span>
+          <p>JAMIE LI</p>
+          <div class="row-actions">
+            <a class="icon-button" href="#edit-member-dialog" aria-label="Edit Jamie Li"><img src="assets/edit.svg" alt="" /></a>
+            <button class="icon-button" type="button" aria-label="Delete Jamie Li"><img src="assets/delete.svg" alt="" /></button>
+          </div>
+        </article>
+        <article class="member-row">
+          <span class="member-avatar">TW</span>
+          <p>TAYLOR WU</p>
+          <div class="row-actions">
+            <a class="icon-button" href="#edit-member-dialog" aria-label="Edit Taylor Wu"><img src="assets/edit.svg" alt="" /></a>
+            <button class="icon-button" type="button" aria-label="Delete Taylor Wu"><img src="assets/delete.svg" alt="" /></button>
+          </div>
+        </article>
+      </section>
+
+      <a id="add-member" class="add-member" href="#add-member-dialog">
+        <img src="assets/add.svg" alt="" />
+        <span>ADD MEMBER</span>
+      </a>
+
+      <section id="add-member-dialog" class="editor-layer" aria-label="Add member" aria-hidden="true">
+        <a class="editor-backdrop" href="#" aria-label="Close dialog"></a>
+        <div class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="add-title">
+          <div class="dialog-heading">
+            <p>MEMBER PROFILE</p>
+            <h2 id="add-title">ADD MEMBER</h2>
+          </div>
+          <label class="name-field">
+            <span>MEMBER NAME</span>
+            <input type="text" placeholder="ENTER NAME" aria-label="Member name" autocomplete="off" />
+          </label>
+          <div class="dialog-actions">
+            <a class="cancel-action" href="#" data-dialog-action="cancel">CANCEL</a>
+            <a class="save-action" href="#" data-dialog-action="save">SAVE</a>
+          </div>
+          <div class="keyboard" aria-label="English keyboard">
+            <div class="key-row"><button>Q</button><button>W</button><button>E</button><button>R</button><button>T</button><button>Y</button><button>U</button><button>I</button><button>O</button><button>P</button></div>
+            <div class="key-row row-two"><button>A</button><button>S</button><button>D</button><button>F</button><button>G</button><button>H</button><button>J</button><button>K</button><button>L</button></div>
+            <div class="key-row"><button class="wide-key"><img src="assets/shift.svg" alt="Shift" /></button><button>Z</button><button>X</button><button>C</button><button>V</button><button>B</button><button>N</button><button>M</button><button class="wide-key"><img src="assets/backspace.svg" alt="Backspace" /></button></div>
+            <div class="key-row bottom-key-row"><button class="space-key">SPACE</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="edit-member-dialog" class="editor-layer" aria-label="Edit member" aria-hidden="true">
+        <a class="editor-backdrop" href="#" aria-label="Close dialog"></a>
+        <div class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+          <div class="dialog-heading">
+            <p>MEMBER PROFILE</p>
+            <h2 id="edit-title">EDIT MEMBER</h2>
+          </div>
+          <label class="name-field">
+            <span>MEMBER NAME</span>
+            <input type="text" value="ALEX CHEN" aria-label="Member name" autocomplete="off" />
+          </label>
+          <div class="dialog-actions">
+            <a class="cancel-action" href="#" data-dialog-action="cancel">CANCEL</a>
+            <a class="save-action" href="#" data-dialog-action="save">SAVE</a>
+          </div>
+          <div class="keyboard" aria-label="English keyboard">
+            <div class="key-row"><button>Q</button><button>W</button><button>E</button><button>R</button><button>T</button><button>Y</button><button>U</button><button>I</button><button>O</button><button>P</button></div>
+            <div class="key-row row-two"><button>A</button><button>S</button><button>D</button><button>F</button><button>G</button><button>H</button><button>J</button><button>K</button><button>L</button></div>
+            <div class="key-row"><button class="wide-key"><img src="assets/shift.svg" alt="Shift" /></button><button>Z</button><button>X</button><button>C</button><button>V</button><button>B</button><button>N</button><button>M</button><button class="wide-key"><img src="assets/backspace.svg" alt="Backspace" /></button></div>
+            <div class="key-row bottom-key-row"><button class="space-key">SPACE</button></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="member-management.js"></script>
+  </body>
+</html>

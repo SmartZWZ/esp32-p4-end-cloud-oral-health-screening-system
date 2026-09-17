@@ -1,0 +1,12 @@
+{
+  "threshold": 0.5,
+  "image_count": 176,
+  "categories": {
+    "acceptable": 25,
+    "negative_clean": 95,
+    "false_negative": 27,
+    "false_positive": 22,
+    "oversegmentation": 5,
+    "severe_undersegmentation": 2
+  }
+}

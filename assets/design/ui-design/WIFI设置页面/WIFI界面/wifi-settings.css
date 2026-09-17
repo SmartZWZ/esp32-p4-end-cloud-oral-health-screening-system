@@ -1,0 +1,141 @@
+:root {
+  --page-width: 720px;
+  --page-height: 1080px;
+  --black: #0b0b0b;
+  --charcoal: #292928;
+  --charcoal-pressed: #383837;
+  --white: #f5f4f1;
+  --gray: #adadab;
+  --divider: #3f3f3e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: var(--page-width);
+  min-height: var(--page-height);
+  margin: 0;
+  background: var(--black);
+}
+
+body {
+  display: grid;
+  place-items: start center;
+  color: var(--white);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.wifi-screen {
+  position: relative;
+  width: var(--page-width);
+  height: var(--page-height);
+  overflow: hidden;
+  background: var(--black);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  height: 141px;
+  padding-left: 20px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.back-control {
+  display: grid;
+  width: 95px;
+  height: 95px;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: var(--charcoal);
+  cursor: pointer;
+  place-items: center;
+}
+
+.back-control img {
+  width: 58px;
+  height: 58px;
+}
+
+.wifi-actions {
+  display: grid;
+  gap: 24px;
+  width: 580px;
+  margin: 13px auto 0;
+}
+
+.wifi-action {
+  display: flex;
+  align-items: center;
+  width: 580px;
+  height: 153px;
+  padding: 0 39px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--charcoal);
+  color: var(--white);
+  cursor: pointer;
+  text-align: left;
+}
+
+.action-icon {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+}
+
+.action-copy {
+  display: grid;
+  gap: 10px;
+  margin-left: 34px;
+}
+
+.action-title {
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.action-description {
+  color: var(--gray);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+.back-control:focus-visible,
+.wifi-action:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 5px;
+}
+
+.back-control:active,
+.wifi-action:active {
+  background: var(--charcoal-pressed);
+}
+
+footer {
+  position: absolute;
+  right: 20px;
+  bottom: 32px;
+  left: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--divider);
+  color: var(--gray);
+  font-size: 20px;
+  font-weight: 400;
+  text-align: center;
+}

@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/config.php';
+$user=require_user();$id=(string)($_GET['id']??'');$s=db()->prepare('SELECT image_path FROM detections WHERE public_id=? AND user_id=? LIMIT 1');$s->execute([$id,(int)$user['id']]);$row=$s->fetch();$path=$row?image_file_path((string)$row['image_path']):null;if(!$path){http_response_code(404);exit('Not found');}$info=function_exists('getimagesize')?@getimagesize($path):false;$mime=is_array($info)?(string)($info['mime']??'image/jpeg'):'image/jpeg';$extensions=['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp'];$extension=$extensions[$mime]??'jpg';header('Content-Type: '.$mime);header('Content-Length: '.(string)filesize($path));header('Cache-Control: private, no-store');header('X-Content-Type-Options: nosniff');if(($_GET['download']??'')==='1')header('Content-Disposition: attachment; filename="chijing-'.$id.'.'.$extension.'"');readfile($path);

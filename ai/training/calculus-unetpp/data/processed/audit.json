@@ -1,0 +1,31 @@
+{
+  "raw_images": 3375,
+  "raw_masks": 3365,
+  "unique_exact_image_groups": 2702,
+  "raw_image_without_mask": 10,
+  "calculus_mask_value": 2,
+  "positive_groups_retained": 390,
+  "negative_groups_retained": 780,
+  "conflicting_duplicate_groups_excluded": 83,
+  "all_background_groups_excluded": 14,
+  "unlabeled_groups_excluded": 0,
+  "negative_ratio": 2.0,
+  "seed": 42,
+  "splits": {
+    "train": {
+      "positive": 273,
+      "negative": 546,
+      "total": 819
+    },
+    "val": {
+      "positive": 58,
+      "negative": 117,
+      "total": 175
+    },
+    "test": {
+      "positive": 59,
+      "negative": 117,
+      "total": 176
+    }
+  }
+}

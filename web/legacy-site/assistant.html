@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN" data-page="assistant" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>语音助手 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/assistant.css">
+  <link rel="stylesheet" href="assets/css/assistant-polish.css">
+  <link rel="stylesheet" href="assets/css/assistant-memory.css?v=20260726-conversation-actions">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a class="active" href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+  <main class="app-main assistant-main">
+    <section class="assistant-page-head">
+      <div><p class="kicker">REALTIME VOICE</p><h1>齿镜助手</h1></div>
+      <p>实时语音对话由百炼千问语音模型提供。对话记录仅保存在当前账户下。</p>
+    </section>
+    <section class="assistant-layout">
+      <aside class="assistant-sidebar" aria-label="对话列表">
+        <div class="assistant-sidebar-head"><p>对话</p><button id="assistant-new" class="text-button" type="button">新建</button></div>
+        <div id="assistant-conversations" class="assistant-conversations"><p>正在读取…</p></div>
+        <button id="assistant-settings" class="assistant-settings" type="button"><span>对话设置</span><small>标题与助手指令</small></button>
+      </aside>
+      <section class="assistant-console" aria-label="齿镜语音助手">
+        <header class="assistant-console-head">
+          <div><p id="assistant-conversation-title">齿镜助手</p><span id="assistant-status" class="assistant-status" aria-live="polite">正在准备对话…</span><span id="assistant-memory-status" class="assistant-memory-status">记忆状态读取中</span></div>
+          <span class="assistant-live-dot" aria-hidden="true"></span>
+        </header>
+        <div id="assistant-http-notice" class="assistant-notice" hidden>
+          当前站点是 HTTP。浏览器会阻止网页访问麦克风；部署 HTTPS 后即可开始语音对话。
+        </div>
+        <div id="assistant-messages" class="assistant-messages" aria-live="polite"><p class="assistant-empty">正在读取对话记录…</p></div>
+        <footer class="assistant-composer">
+          <div class="assistant-voice-copy"><strong id="assistant-voice-title">按下开始说话</strong><span id="assistant-voice-description">模型会自动识别说话结束，并以语音和文字回复。</span></div>
+          <button id="assistant-mic" class="assistant-mic" type="button" aria-label="开始语音对话"><span class="assistant-mic-icon" aria-hidden="true"></span><span id="assistant-mic-label">开始</span></button>
+        </footer>
+        <p class="assistant-privacy">请勿在对话中提供密码、身份证号等敏感信息。口腔相关回复仅供辅助参考，不替代专业诊疗。</p>
+      </section>
+    </section>
+  </main>
+  <dialog id="assistant-settings-dialog" class="modal assistant-settings-dialog">
+    <form id="assistant-settings-form">
+      <p class="panel-index">VOICE ASSISTANT / SETTINGS</p>
+      <h2>对话设置</h2>
+      <p>指令只影响当前对话，并会随下一次语音连接安全地下发给模型。</p>
+      <label>对话标题<input id="assistant-title-input" name="title" maxlength="120" required></label>
+      <label>助手指令<textarea id="assistant-instructions-input" name="instructions" maxlength="1200" required></textarea></label>
+      <label class="assistant-memory-toggle"><input id="assistant-memory-enabled" type="checkbox"><span><strong>记住当前对话</strong><small>连接时参考最近 10 轮，并将更早内容压缩为摘要。新对话不会继承本对话。</small></span></label>
+      <section class="assistant-memory-panel">
+        <div><strong>历史摘要</strong><span id="assistant-summary-meta">尚未生成摘要</span></div>
+        <pre id="assistant-summary-text">暂无历史摘要。对话超过最近记忆窗口后会自动生成。</pre>
+        <div class="assistant-memory-actions">
+          <button id="assistant-clear-summary" class="button button-plain" type="button">清除摘要</button>
+          <button id="assistant-clear-messages" class="button button-plain" type="button">清空消息</button>
+          <button id="assistant-delete-conversation" class="button assistant-danger-button" type="button">永久删除对话</button>
+        </div>
+      </section>
+      <details id="assistant-admin-memory" class="assistant-admin-memory" hidden>
+        <summary>全局记忆管理（管理员）</summary>
+        <div class="assistant-admin-grid">
+          <label>参考轮数<input id="assistant-admin-turns" type="number" min="1" max="30"></label>
+          <label>设备空闲分段（分钟）<input id="assistant-admin-idle" type="number" min="5" max="1440"></label>
+          <label>保留天数（0 为永久）<input id="assistant-admin-retention" type="number" min="0" max="3650"></label>
+          <label>摘要模型<input id="assistant-admin-model" maxlength="96"></label>
+        </div>
+        <button id="assistant-admin-save" class="button button-plain" type="button">保存全局设置</button>
+      </details>
+      <p id="assistant-settings-message" class="form-message" role="alert"></p>
+      <div class="modal-actions"><button id="assistant-settings-cancel" class="button button-plain" type="button">取消</button><button class="button button-fill" type="submit">保存设置</button></div>
+    </form>
+  </dialog>
+  <dialog id="assistant-action-dialog" class="modal assistant-action-dialog">
+    <form id="assistant-action-form">
+      <p id="assistant-action-kicker" class="panel-index">CONVERSATION / MANAGE</p>
+      <h2 id="assistant-action-title">管理对话</h2>
+      <p id="assistant-action-description">选择要执行的操作。</p>
+      <label id="assistant-rename-field" hidden>
+        对话名称
+        <input id="assistant-rename-input" name="title" maxlength="120" autocomplete="off">
+        <small>使用容易辨认的名称，最多 120 个字符。</small>
+      </label>
+      <div id="assistant-action-impact" class="assistant-action-impact" hidden></div>
+      <p id="assistant-action-message" class="form-message" role="alert"></p>
+      <div class="modal-actions">
+        <button id="assistant-action-cancel" class="button button-plain" type="button">取消</button>
+        <button id="assistant-action-confirm" class="button button-fill" type="submit">确认</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="assets/js/assistant.js?v=20260726-conversation-actions"></script>
+  <script src="assets/js/app.js?v=20260812-diagnostics"></script>
+</body>
+</html>

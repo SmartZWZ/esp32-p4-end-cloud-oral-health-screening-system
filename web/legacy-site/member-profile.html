@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN" data-page="member-profile" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>成员健康档案 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/member-profile.css?v=20260821-archive-322-v1">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a class="active" href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main member-profile-main">
+    <a class="member-profile-back" href="members.html">← 返回家庭成员</a>
+
+    <section class="member-profile-identity">
+      <div class="member-profile-monogram" id="member-profile-monogram" aria-hidden="true">—</div>
+      <div class="member-profile-heading">
+        <p class="kicker">ORAL HEALTH ARCHIVE</p>
+        <h1 id="member-profile-name">正在读取成员档案</h1>
+        <p id="member-profile-meta">—</p>
+      </div>
+      <div class="member-profile-actions">
+        <a id="member-profile-report" class="button button-fill" href="family-reports.html">生成综合报告</a>
+        <a id="member-profile-ai" class="button button-plain" href="ai-dentist.html">询问 AI 牙医</a>
+      </div>
+    </section>
+
+    <p id="member-profile-message" class="member-profile-message" role="status" aria-live="polite"></p>
+
+    <nav class="member-profile-tabs" aria-label="成员健康档案内容" role="tablist">
+      <button class="is-active" id="member-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="member-panel-overview" data-profile-tab="overview"><span>概览</span><small>重点信息</small></button>
+      <button id="member-tab-archives" type="button" role="tab" aria-selected="false" aria-controls="member-panel-archives" data-profile-tab="archives"><span>采集档案</span><small id="member-tab-archive-count">—</small></button>
+      <button id="member-tab-reports" type="button" role="tab" aria-selected="false" aria-controls="member-panel-reports" data-profile-tab="reports"><span>报告</span><small id="member-tab-report-count">—</small></button>
+      <button id="member-tab-images" type="button" role="tab" aria-selected="false" aria-controls="member-panel-images" data-profile-tab="images"><span>全部单张影像</span><small id="member-tab-image-count">—</small></button>
+    </nav>
+
+    <section class="member-profile-panel is-active" id="member-panel-overview" role="tabpanel" aria-labelledby="member-tab-overview" data-profile-panel="overview">
+      <div class="member-overview-grid">
+        <article class="member-advice" id="member-advice">
+          <header class="member-overview-head">
+            <div><p class="kicker">LATEST GUIDANCE</p><h2>最近报告建议</h2></div>
+            <span id="member-advice-date">—</span>
+          </header>
+          <div class="member-advice-copy">
+            <span id="member-advice-risk" class="member-risk-label">尚未分级</span>
+            <h3 id="member-advice-title">正在读取最新建议</h3>
+            <p id="member-advice-summary">—</p>
+            <div id="member-advice-list" class="member-advice-list"></div>
+            <a id="member-advice-link" class="text-button" hidden>查看完整报告</a>
+          </div>
+        </article>
+
+        <aside class="member-overview-side">
+          <article class="member-recent-card" id="member-recent-capture">
+            <header><p class="kicker">RECENT CAPTURE</p><h2>最近一次采集</h2></header>
+            <div id="member-recent-capture-content" class="member-recent-content"><p class="member-profile-empty">正在读取采集记录…</p></div>
+          </article>
+          <article class="member-recent-card" id="member-recent-report">
+            <header><p class="kicker">RECENT REPORT</p><h2>最近一份报告</h2></header>
+            <div id="member-recent-report-content" class="member-recent-content"><p class="member-profile-empty">正在读取报告…</p></div>
+          </article>
+        </aside>
+      </div>
+
+      <section class="member-profile-stats" aria-label="成员档案统计">
+        <article><strong id="member-stat-archives">—</strong><span>次全口采集</span></article>
+        <article><strong id="member-stat-images">—</strong><span>张原始照片</span></article>
+        <article><strong id="member-stat-models">—</strong><span>次模型检测</span></article>
+        <article><strong id="member-stat-ai">—</strong><span>份健康报告</span></article>
+      </section>
+    </section>
+
+    <section class="member-profile-panel" id="member-panel-archives" role="tabpanel" aria-labelledby="member-tab-archives" data-profile-panel="archives" hidden>
+      <header class="member-section-head">
+        <div><p class="kicker">FULL-MOUTH ARCHIVE</p><h2>全口采集档案</h2><p>每个档案袋对应一次标准七视图采集，原图仍可在影像管理中逐张查看。</p></div>
+        <span id="member-archive-total">—</span>
+      </header>
+      <div id="member-archive-list" class="member-archive-list"><p class="member-profile-empty">正在整理全口采集档案…</p></div>
+    </section>
+
+    <section class="member-profile-panel" id="member-panel-reports" role="tabpanel" aria-labelledby="member-tab-reports" data-profile-panel="reports" hidden>
+      <header class="member-section-head member-report-head">
+        <div><p class="kicker">REPORT LIBRARY</p><h2>健康报告</h2><p>优先查看口腔综合报告；底层模型结果保留在技术记录中。</p></div>
+        <div class="member-report-filters" role="group" aria-label="筛选报告">
+          <button class="is-active" type="button" data-report-filter="family_report">口腔综合报告</button>
+          <button type="button" data-report-filter="ai_dentist">AI牙医</button>
+          <button type="button" data-report-filter="model">模型记录</button>
+          <button type="button" data-report-filter="all">全部</button>
+        </div>
+      </header>
+      <div id="member-report-list" class="member-report-list"><p class="member-profile-empty">正在读取报告…</p></div>
+    </section>
+
+    <section class="member-profile-panel" id="member-panel-images" role="tabpanel" aria-labelledby="member-tab-images" data-profile-panel="images" hidden>
+      <header class="member-section-head">
+        <div><p class="kicker">SINGLE IMAGE LIBRARY</p><h2>全部单张影像</h2><p>包括设备单张采集、本地上传，以及全口档案中的七张原图。</p></div>
+        <span id="member-image-total">—</span>
+      </header>
+      <div id="member-image-grid" class="member-image-grid"><p class="member-profile-empty">正在读取照片…</p></div>
+    </section>
+  </main>
+
+  <dialog id="member-image-preview" class="member-image-preview">
+    <header><div><strong id="member-preview-title">口腔照片</strong><span id="member-preview-meta">—</span></div><button id="member-preview-close" type="button" aria-label="关闭预览">×</button></header>
+    <div class="member-preview-stage"><img id="member-preview-image" alt="成员口腔照片"></div>
+    <footer><a id="member-preview-download" class="button button-plain" download>下载原图</a><a id="member-preview-model" class="button button-fill">模型处理</a></footer>
+  </dialog>
+
+<script src="assets/js/member-profile.js?v=20260815-image-editor-v1"></script>
+<script src="assets/js/app.js?v=20260815-editor-v1"></script>
+</body>
+</html>

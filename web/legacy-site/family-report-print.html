@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN" data-page="family-report-print" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>口腔综合报告 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/family-report-print.css?v=20260822-seven-view-v1">
+</head>
+<body>
+  <div class="print-toolbar">
+    <a id="print-back" href="family-reports.html">← 返回报告</a>
+    <p>在打印窗口中选择“另存为 PDF”，并启用“背景图形”。</p>
+    <button id="print-button" type="button">打印 / 保存 PDF</button>
+  </div>
+
+  <div class="print-watermark" aria-hidden="true"><img src="cj.svg" alt=""><span>齿镜</span></div>
+  <main id="print-report" class="print-report">
+    <p id="print-loading">正在读取报告…</p>
+  </main>
+  <footer class="print-fixed-footer">
+      <span>齿镜 · 口腔综合报告</span>
+    <span>仅用于口腔照片辅助筛查，不替代专业诊断</span>
+  </footer>
+
+  <script src="assets/js/family-report-print.js?v=20260823-view-model-policy-v1"></script>
+  <script src="assets/js/app.js?v=20260812-diagnostics"></script>
+</body>
+</html>

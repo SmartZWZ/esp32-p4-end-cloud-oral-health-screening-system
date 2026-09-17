@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN" data-page="family-reports" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>口腔综合报告 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/visibility.css">
+  <link rel="stylesheet" href="assets/css/family-reports.css?v=20260822-seven-view-v1">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a class="active" href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main family-report-main">
+    <section class="family-report-hero">
+      <div>
+        <a class="family-report-back" href="ai-dentist.html">← 返回 AI牙医</a>
+        <p class="family-report-kicker">FAMILY ORAL REVIEW</p>
+          <h1>口腔综合报告</h1>
+        <p>优先使用一次完整的七图全口采集。七个标准视角分别观察，再结合原图进行统一复核；补图和替换图同样可以生成报告。</p>
+      </div>
+      <button id="family-new-report" class="button button-plain" type="button">新建报告</button>
+    </section>
+
+    <section class="family-report-workspace">
+      <aside class="family-report-sidebar">
+        <section class="family-report-intake">
+          <p class="family-report-index">01 / REPORT INPUT</p>
+          <h2>选择报告成员</h2>
+          <form id="family-report-form">
+            <label>
+              <span>家庭成员</span>
+              <select id="family-report-member" required><option value="">请选择成员</option></select>
+            </label>
+            <fieldset class="family-source-mode">
+              <legend>报告来源</legend>
+              <label><input type="radio" name="family-source-mode" value="seven_view_archive" checked><span><strong>七图全口档案</strong><small>正式综合报告</small></span></label>
+              <label><input type="radio" name="family-source-mode" value="recent_images"><span><strong>最近图片</strong><small>快速观察</small></span></label>
+            </fieldset>
+            <section id="family-archive-picker" class="family-archive-picker">
+              <header><strong>选择采集档案</strong><span id="family-archive-count">—</span></header>
+              <div id="family-archive-list"><p class="family-report-empty">选择成员后读取七图档案。</p></div>
+              <p>只检查七个标准位置是否完整；设备采集、本地补图和替换图都可以使用。</p>
+            </section>
+            <section id="family-quick-source" class="family-quick-source" hidden>
+              <strong>最近图片快速观察</strong>
+              <p>自动使用该成员最近最多 6 张有效照片，适合旧数据，不视为规范七图全口报告。</p>
+            </section>
+            <label>
+              <span>症状或关注点 <small>选填</small></span>
+              <textarea id="family-report-symptoms" maxlength="2000" placeholder="例如：最近刷牙时出血；不填写也可以直接生成。"></textarea>
+            </label>
+            <div class="family-report-rule">
+              <span>照片规则</span>
+              <strong id="family-report-rule-title">完整七图档案</strong>
+              <small id="family-report-rule-copy">七个标准位置齐全即可；不限制是否发生过删除、补图或替换。</small>
+            </div>
+            <p id="family-report-message" class="family-report-message" role="status" aria-live="polite"></p>
+              <button id="family-report-start" class="button button-fill" type="submit">生成综合报告</button>
+          </form>
+        </section>
+
+        <section class="family-report-history">
+          <header><div><p class="family-report-index">ARCHIVE</p><h2>历史报告</h2></div><button id="family-report-refresh" class="text-button" type="button">刷新</button></header>
+          <div id="family-report-list"><p class="family-report-empty">正在读取…</p></div>
+        </section>
+      </aside>
+
+      <section class="family-report-stage" aria-live="polite">
+        <div id="family-report-welcome" class="family-report-welcome">
+          <div class="family-report-contact-sheet" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="family-report-index">SEVEN STANDARD VIEWS · TWO INDEPENDENT CHANNELS</p>
+          <h2>从一次完整采集开始</h2>
+          <p>选择成员和七图档案。报告保留每个标准视角的独立观察，再进行七图联合复核，同时让本地模型结果保持独立。</p>
+        </div>
+
+        <section id="family-report-progress" class="family-report-progress" hidden>
+          <header>
+            <div>
+              <p class="family-report-index">REPORT IN PROGRESS</p>
+              <h2 id="family-progress-title">正在生成报告</h2>
+              <p id="family-progress-label">正在准备照片…</p>
+            </div>
+            <span id="family-progress-percent">0%</span>
+          </header>
+          <div class="family-progress-track"><i id="family-progress-bar"></i></div>
+          <div class="family-progress-columns">
+            <section>
+              <div class="family-progress-heading"><span>独立 AI 观察</span><strong id="family-ai-progress-count">0/0</strong></div>
+              <div id="family-ai-progress-items" class="family-progress-items"></div>
+            </section>
+            <section>
+              <div class="family-progress-heading"><span>实验模型分析</span><strong id="family-model-progress-count">0/0</strong></div>
+              <div id="family-model-progress-items" class="family-progress-items"></div>
+            </section>
+          </div>
+          <div class="family-progress-final">
+            <span id="family-summary-step">等待生成成员汇总</span>
+            <span id="family-model-summary-step">等待整理实验模型章节</span>
+          </div>
+          <div class="family-progress-actions">
+            <p>本地模型电脑离线时，任务会保留在队列中，恢复后可继续。</p>
+            <button id="family-retry-report" class="button button-plain" type="button" hidden>重试未完成步骤</button>
+            <button id="family-skip-models" class="button button-plain" type="button" hidden>跳过本地模型并继续</button>
+          </div>
+        </section>
+
+        <article id="family-report-document" class="family-report-document" hidden>
+          <header class="family-document-head">
+            <div>
+              <p class="family-report-index">PRELIMINARY ORAL REPORT</p>
+                  <h2 id="family-document-title">口腔综合报告</h2>
+              <p id="family-document-meta">—</p>
+            </div>
+            <div class="family-document-actions">
+              <button id="family-report-rename" class="text-button" type="button">重命名</button>
+              <a id="family-report-print" class="text-button" target="_blank" rel="noopener">下载 / PDF</a>
+              <button id="family-report-delete" class="text-button is-danger" type="button">删除</button>
+            </div>
+          </header>
+
+          <section class="family-clinical-summary">
+            <div class="family-summary-risk"><span>AI 独立观察风险</span><strong id="family-overall-risk">—</strong></div>
+            <div><p class="family-report-index">INDEPENDENT AI SUMMARY</p><h3>成员级初步观察</h3><p id="family-clinical-text">—</p></div>
+          </section>
+
+          <aside id="family-source-change" class="family-source-change" hidden></aside>
+
+          <section id="family-seven-view-overview" class="family-document-section family-seven-view-overview" hidden>
+            <header><p class="family-report-index">SEVEN-VIEW CONSOLIDATION</p><h3>七视图联合复核</h3><p id="family-collection-quality">—</p></header>
+            <div id="family-region-summaries" class="family-region-summaries"></div>
+          </section>
+
+          <section class="family-document-section">
+            <header><p class="family-report-index">VIEW-BY-VIEW REVIEW</p><h3>逐视角独立报告</h3><p>每一份内容只依据对应原始照片生成，不读取本地模型结果。</p></header>
+            <div id="family-image-reports" class="family-image-reports"></div>
+          </section>
+
+          <section class="family-document-section family-recommendation-section">
+            <header><p class="family-report-index">NEXT STEPS</p><h3>汇总建议与观察边界</h3></header>
+            <div class="family-summary-grid">
+              <div><h4>下一步建议</h4><div id="family-recommendations"></div></div>
+              <div><h4>仅凭照片无法判断</h4><ul id="family-not-assessable"></ul></div>
+            </div>
+          </section>
+
+          <section class="family-model-section">
+            <header>
+              <div><p class="family-report-index">EXPERIMENTAL MODEL APPENDIX</p><h3>本地模型技术附录</h3></div>
+              <span>不参与 AI 牙医判断</span>
+            </header>
+            <div class="family-model-notice">
+              <strong>实验性输出</strong>
+              <p id="family-model-notice">本节仅记录本地模型输出，不作为诊断依据，也没有被用于生成上方 AI 牙医结论。</p>
+            </div>
+            <p id="family-model-summary">—</p>
+            <div id="family-model-images" class="family-model-images"></div>
+            <details id="family-tooth-details" class="family-tooth-details">
+              <summary>展开查看 Tooth（牙体轮廓）输出</summary>
+              <div id="family-tooth-content"></div>
+            </details>
+          </section>
+
+          <footer class="family-document-footer">
+            <img src="cj.svg" alt="">
+            <p id="family-document-disclaimer">本报告仅用于口腔照片辅助筛查，不替代口腔医生面诊、探诊或影像学检查。</p>
+          </footer>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="family-report-complete" class="family-report-dialog">
+    <div><img src="cj.svg" alt=""><span>报告已生成</span></div>
+          <h2>本次口腔综合报告已完成</h2>
+    <p>逐图 AI 观察、成员汇总和实验模型附录已保存到历史报告。</p>
+    <form method="dialog"><button class="button button-fill" type="submit">查看完整报告</button></form>
+  </dialog>
+
+  <dialog id="family-report-confirm-delete" class="family-report-dialog">
+    <p class="family-report-index">PERMANENT DELETE</p>
+    <h2 id="family-delete-title">删除这份报告？</h2>
+    <p>只会删除报告本身，原始照片和已有模型分析记录都会保留。</p>
+    <div>
+      <button id="family-delete-cancel" class="button button-plain" type="button">取消</button>
+      <button id="family-delete-confirm" class="button family-danger-button" type="button">确认删除</button>
+    </div>
+  </dialog>
+
+<script src="assets/js/family-reports.js?v=20260823-view-model-policy-v1"></script>
+  <script src="assets/js/app.js?v=20260812-diagnostics"></script>
+</body>
+</html>

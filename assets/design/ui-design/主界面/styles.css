@@ -1,0 +1,217 @@
+:root {
+  --screen-width: 720px;
+  --screen-height: 1080px;
+  --background: #0b0b0b;
+  --surface: #212120;
+  --surface-pressed: #383836;
+  --ink: #f5f4f1;
+  --muted-ink: #adadab;
+  --rule: #565655;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: var(--screen-width);
+  min-height: var(--screen-height);
+  margin: 0;
+  background: var(--background);
+}
+
+body {
+  display: grid;
+  place-items: start center;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.screen {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  overflow: hidden;
+  background: var(--background);
+}
+
+.time-card {
+  position: absolute;
+  top: 62px;
+  left: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 600px;
+  height: 133px;
+  padding: 0 39px;
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.time-summary {
+  display: grid;
+  gap: 9px;
+}
+
+.time,
+.date {
+  margin: 0;
+}
+
+.time {
+  color: var(--ink);
+  font-size: 57px;
+  font-weight: 300;
+  letter-spacing: -2.4px;
+  line-height: 0.9;
+}
+
+.time span {
+  margin-left: 5px;
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+  vertical-align: 7px;
+}
+
+.date {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+.network-state {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+}
+
+.network-state img {
+  width: 49px;
+  height: 49px;
+}
+
+/* The offline class keeps the time visible like the initialization screen. */
+.time-card.is-offline {
+  justify-content: center;
+}
+
+.time-card.is-offline .time-summary {
+  justify-items: center;
+}
+
+.time-card.is-offline .network-state {
+  display: none;
+}
+
+.capture-button {
+  position: absolute;
+  top: 241px;
+  left: 144px;
+  display: grid;
+  width: 432px;
+  height: 315px;
+  padding: 43px 24px 38px;
+  border: 0;
+  border-radius: 32px;
+  place-items: center;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: 500 37px/1 "Aptos", "Segoe UI", Arial, sans-serif;
+  letter-spacing: 0.8px;
+}
+
+.capture-button img {
+  width: 171px;
+  height: 171px;
+}
+
+.secondary-actions {
+  position: absolute;
+  top: 584px;
+  left: 85px;
+  display: grid;
+  gap: 15px;
+  width: 550px;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  width: 550px;
+  height: 115px;
+  padding: 0 43px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+}
+
+.action-card > img {
+  width: 75px;
+  height: 75px;
+  flex: 0 0 75px;
+}
+
+.action-copy {
+  display: grid;
+  gap: 10px;
+  margin-left: 31px;
+}
+
+.action-title {
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  line-height: 1;
+}
+
+.action-description {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+.brand {
+  position: absolute;
+  right: 60px;
+  bottom: 33px;
+  left: 60px;
+  padding-top: 19px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted-ink);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  text-align: center;
+}
+
+.capture-button:focus-visible,
+.action-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 5px;
+}
+
+.capture-button:active,
+.action-card:active {
+  background: var(--surface-pressed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
+}

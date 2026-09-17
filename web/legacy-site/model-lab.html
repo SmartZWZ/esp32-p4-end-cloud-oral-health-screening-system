@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="zh-CN" data-page="model-lab" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>模型工作台 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/model-lab.css?v=20260823-darkline-lab-v1">
+  <link rel="stylesheet" href="assets/css/image-upload.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a class="active" href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main model-lab-main">
+    <section class="page-head model-lab-head">
+      <div>
+        <a class="model-lab-back" href="detections.html">← 返回影像管理</a>
+        <p class="kicker">ORAL IMAGE MODEL WORKBENCH</p>
+        <h1>模型工作台</h1>
+      </div>
+      <div class="model-lab-head-aside"><p>选择已归档影像，由本地 GPU 完成推理；云端只负责安全传送任务和保存结果。</p><button id="open-local-upload" class="button button-plain" type="button">上传本地影像</button></div>
+    </section>
+
+    <form id="model-lab-form" class="model-lab-command" aria-label="模型任务设置">
+      <label>
+        <span>检测影像</span>
+        <select id="model-lab-image" name="public_id" required></select>
+      </label>
+      <label>
+        <span>分析模型</span>
+        <select id="model-lab-pipeline" name="pipeline">
+          <option value="caries">龋齿候选检测</option>
+          <option value="both">综合检测</option>
+          <option value="dental_seg">口腔四类分割</option>
+          <option value="calculus_seg">牙结石分割</option>
+          <option value="tooth_outline">牙齿轮廓与浅龋暗线</option>
+          <option value="all_models">全部模型联合分析</option>
+        </select>
+      </label>
+      <div class="model-lab-command-meta">
+        <span>执行位置</span>
+        <strong><i aria-hidden="true"></i> 本地 RTX 工作端</strong>
+      </div>
+      <button id="model-lab-run" class="button button-fill" type="submit">开始分析</button>
+    </form>
+    <p id="model-lab-message" class="model-lab-message" role="status" aria-live="polite"></p>
+
+    <section class="model-lab-status" aria-label="当前任务状态">
+      <div><span>任务状态</span><strong id="model-lab-status">等待选择</strong></div>
+      <div><span>所属成员</span><strong id="model-lab-member">—</strong></div>
+      <div><span>采集时间</span><strong id="model-lab-captured">—</strong></div>
+      <div><span>记录编号</span><strong id="model-lab-id">—</strong></div>
+    </section>
+    <section id="model-joint-progress" class="model-joint-progress" hidden aria-live="polite">
+      <div class="model-progress-copy"><span>JOINT PIPELINE</span><strong id="model-progress-label">准备运行全部模型联合分析</strong></div>
+      <div class="model-progress-track" aria-hidden="true"><i id="model-progress-value"></i></div>
+      <ol id="model-progress-stages">
+        <li>龋齿候选</li><li>综合检测</li><li>四类分割</li><li>牙结石</li><li>牙齿轮廓</li>
+      </ol>
+    </section>
+
+    <section class="model-lab-workspace">
+      <article class="model-lightbox">
+        <header class="model-lightbox-head">
+          <div>
+            <p class="panel-index">DIAGNOSTIC VIEWER</p>
+            <h2>影像阅片台</h2>
+          </div>
+          <div class="model-view-modes" role="group" aria-label="显示模式">
+            <button class="is-active" type="button" data-lab-mode="overlay">叠加</button>
+            <button type="button" data-lab-mode="compare">对照</button>
+            <button type="button" data-lab-mode="original">原图</button>
+            <button type="button" data-lab-mode="mask">仅分割</button>
+          </div>
+        </header>
+
+        <div id="model-lab-viewport" class="model-lab-viewport" tabindex="0" aria-label="模型影像，可滚轮缩放并拖动查看">
+          <div id="model-lab-empty" class="model-lab-empty">
+            <span>IMAGE / MODEL</span>
+            <p>选择影像后在这里查看原图与模型标记。</p>
+          </div>
+          <div id="model-lab-stage" class="model-lab-stage" hidden>
+            <img id="model-lab-source" alt="待检测口腔影像">
+            <canvas id="model-lab-overlay" aria-label="模型分割结果"></canvas>
+            <div id="model-lab-compare-line" class="model-lab-compare-line" hidden><span></span></div>
+          </div>
+        </div>
+
+        <div class="model-view-toolbar">
+          <label class="model-toggle"><input id="model-show-mask" type="checkbox" checked><span>分割区域</span></label>
+          <label class="model-toggle"><input id="model-show-box" type="checkbox" checked><span>候选框</span></label>
+          <label class="model-toggle"><input id="model-show-label" type="checkbox" checked><span>标签</span></label>
+          <label class="model-range"><span>透明度</span><input id="model-mask-opacity" type="range" min="5" max="75" value="28"><output id="model-mask-opacity-value">28%</output></label>
+          <label class="model-range"><span>显示阈值</span><input id="model-confidence-filter" type="range" min="5" max="95" value="25"><output id="model-confidence-value">25%</output></label>
+        </div>
+
+        <div class="model-view-footer">
+          <div class="model-legend" aria-label="分割类别图例">
+            <button class="is-active" type="button" data-class-filter="all"><i></i>全部</button>
+            <button type="button" data-class-filter="Caries"><i></i>龋齿</button>
+            <button type="button" data-class-filter="Cavity"><i></i>窝洞</button>
+            <button type="button" data-class-filter="Crack"><i></i>裂纹</button>
+            <button type="button" data-class-filter="Tooth"><i></i>牙齿</button>
+          </div>
+          <div class="model-zoom">
+            <button id="model-download-view" type="button">下载叠加图</button>
+            <button type="button" data-lab-zoom="out" aria-label="缩小">−</button>
+            <output id="model-lab-zoom-value">100%</output>
+            <button type="button" data-lab-zoom="in" aria-label="放大">＋</button>
+            <button type="button" data-lab-zoom="fit">适应</button>
+          </div>
+        </div>
+        <section id="model-joint-filters" class="model-joint-filters" hidden>
+          <header><div><span>RESULT CHANNELS</span><strong>选择要叠加的模型与类别</strong></div><small id="model-visible-summary">显示全部结果</small></header>
+          <div id="model-joint-filter-groups"></div>
+        </section>
+        <label id="model-compare-control" class="model-compare-control" hidden>
+          <span>原图</span>
+          <input id="model-compare-range" type="range" min="0" max="100" value="50" aria-label="原图与结果对照位置">
+          <span>模型结果</span>
+        </label>
+      </article>
+
+      <aside class="model-inspector">
+        <div class="model-inspector-title">
+          <p class="panel-index">MODEL OUTPUT</p>
+          <span id="model-result-badge">尚无结果</span>
+        </div>
+        <h2 id="model-result-title">等待模型分析</h2>
+        <p id="model-result-summary">选择一张影像并开始分析，完成后这里会显示模型摘要、运行信息和分项统计。</p>
+        <div id="model-pipeline-reports" class="model-pipeline-reports" hidden></div>
+
+        <dl class="model-runtime">
+          <div><dt>模型</dt><dd id="model-runtime-name">—</dd></div>
+          <div><dt>输入尺寸</dt><dd id="model-runtime-size">—</dd></div>
+          <div><dt>推理设备</dt><dd id="model-runtime-device">—</dd></div>
+          <div><dt>推理耗时</dt><dd id="model-runtime-time">—</dd></div>
+        </dl>
+
+        <div class="model-inspector-metrics">
+          <div><span>候选区域</span><strong id="model-total-findings">0</strong></div>
+          <div><span>平均置信度</span><strong id="model-average-confidence">—</strong></div>
+        </div>
+        <p class="model-result-notice">模型输出用于口腔照片辅助筛查，不构成医学诊断。分割区域和置信度需由口腔专业人员结合原图复核。</p>
+      </aside>
+    </section>
+
+    <section id="darkline-lab" class="darkline-lab" hidden aria-labelledby="darkline-lab-title">
+      <header class="darkline-lab-head">
+        <div>
+          <p class="panel-index">TOOTH EVIDENCE LAB</p>
+          <h2 id="darkline-lab-title">单牙浅龋暗线证据实验台</h2>
+          <p>轮廓来自牙齿实例模型；参数调整由本地 RTX 工作端按桌面版同一套 OpenCV 算法重新计算。</p>
+        </div>
+        <div class="darkline-lab-state"><i aria-hidden="true"></i><span id="darkline-lab-status">选择牙齿后可调整参数</span></div>
+      </header>
+
+      <div class="darkline-lab-grid">
+        <aside class="darkline-tooth-rail" aria-label="牙齿实例列表">
+          <div class="darkline-column-label"><span>牙齿实例</span><small id="darkline-tooth-count">0 颗</small></div>
+          <div id="darkline-tooth-list" class="darkline-tooth-list"></div>
+        </aside>
+
+        <article class="darkline-evidence">
+          <div class="darkline-evidence-bar">
+            <div><span id="darkline-current-tooth">T—</span><strong id="darkline-current-layer">全图定位</strong></div>
+            <div class="darkline-layer-tabs" role="tablist" aria-label="证据层">
+              <button class="is-active" type="button" data-darkline-layer="overview">全图定位</button>
+              <button type="button" data-darkline-layer="tooth">单牙原图</button>
+              <button type="button" data-darkline-layer="normalized">光照归一</button>
+              <button type="button" data-darkline-layer="heatmap">暗线热力</button>
+              <button type="button" data-darkline-layer="candidate">候选暗区</button>
+              <button type="button" data-darkline-layer="skeleton">骨架分叉</button>
+            </div>
+          </div>
+          <div id="darkline-evidence-viewport" class="darkline-evidence-viewport">
+            <div id="darkline-evidence-empty" class="darkline-evidence-empty"><span>SELECT A TOOTH</span><p>选择一颗牙，查看已有候选；调整参数后生成完整证据层。</p></div>
+            <img id="darkline-evidence-image" alt="浅龋暗线证据层" hidden>
+            <canvas id="darkline-evidence-canvas" hidden aria-label="牙齿轮廓定位"></canvas>
+          </div>
+          <div class="darkline-evidence-caption">
+            <p id="darkline-layer-description">全图定位用于确认当前牙齿在原图中的位置，不参与最终诊断。</p>
+            <button id="darkline-download-evidence" type="button" disabled>下载当前证据层</button>
+          </div>
+          <dl class="darkline-metrics">
+            <div><dt>候选暗线</dt><dd id="darkline-metric-candidates">0</dd></div>
+            <div><dt>骨架总长</dt><dd id="darkline-metric-length">—</dd></div>
+            <div><dt>分叉点</dt><dd id="darkline-metric-branches">—</dd></div>
+            <div><dt>轮廓置信度</dt><dd id="darkline-metric-confidence">—</dd></div>
+          </dl>
+        </article>
+
+        <aside class="darkline-controls">
+          <div class="darkline-column-label"><span>数字图像处理参数</span><button id="darkline-reset-params" type="button">恢复默认</button></div>
+          <form id="darkline-params-form">
+            <label><span>轮廓内缩<output data-param-output="edge_shrink_pct">6.0%</output></span><input name="edge_shrink_pct" type="range" min="0" max="15" step="0.5" value="6"></label>
+            <label><span>暗线响应阈值<output data-param-output="darkness_threshold">60.2%</output></span><input name="darkness_threshold" type="range" min="0.2" max="0.8" step="0.01" value="0.602"></label>
+            <label><span>黑色核心上限<output data-param-output="black_level_pct">35%</output></span><input name="black_level_pct" type="range" min="20" max="65" step="1" value="35"></label>
+            <label><span>最低局部对比度<output data-param-output="min_contrast_pct">5%</output></span><input name="min_contrast_pct" type="range" min="2" max="20" step="0.5" value="5"></label>
+            <label><span>最低线宽<output data-param-output="min_width_px">0.5 px</output></span><input name="min_width_px" type="range" min="0.5" max="6" step="0.5" value="0.5"></label>
+            <label><span>最低线长<output data-param-output="min_length_pct">18%</output></span><input name="min_length_pct" type="range" min="2" max="25" step="1" value="18"></label>
+            <label><span>平滑尺度<output data-param-output="smooth_px">5 px</output></span><input name="smooth_px" type="range" min="1" max="9" step="2" value="5"></label>
+            <label class="darkline-switch"><span><strong>排除高光区域</strong><small>降低反光材料和唾液高光干扰</small></span><input name="exclude_highlights" type="checkbox" checked></label>
+            <p id="darkline-param-note">参数尚未修改。每次提交只重算当前牙齿，不会重复运行轮廓模型。</p>
+            <button id="darkline-run-params" class="button button-fill" type="submit">生成当前牙齿证据层</button>
+          </form>
+        </aside>
+      </div>
+
+      <section class="darkline-candidate-section">
+        <div class="model-section-head"><div><p class="panel-index">EVIDENCE DETAIL</p><h3>暗线候选证据</h3></div><p id="darkline-candidate-count">0 项</p></div>
+        <div class="model-detail-table-wrap">
+          <table class="model-detail-table darkline-candidate-table">
+            <thead><tr><th>候选</th><th>形态</th><th>结构评分</th><th>骨架长度</th><th>中位线宽</th><th>局部对比度</th><th>证据模式</th></tr></thead>
+            <tbody id="darkline-candidate-body"><tr><td colspan="7">选择牙齿后显示已有候选，重新计算后显示参数对应结果。</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+      <p class="darkline-lab-notice">证据层用于解释算法为何保留某条暗线，不等同于龋齿诊断。天然窝沟、色素沉着、裂纹及修复体边缘仍需专业人员复核。</p>
+    </section>
+
+    <section class="model-class-section">
+      <div class="model-section-head">
+        <div><p class="panel-index">CLASS DISTRIBUTION</p><h2>分类结果</h2></div>
+        <p>点击类别可同步筛选阅片台与明细表。</p>
+      </div>
+      <div id="model-class-grid" class="model-class-grid">
+        <button type="button" data-class-card="Caries"><span>龋齿</span><strong>0</strong><small>CARIES</small></button>
+        <button type="button" data-class-card="Cavity"><span>窝洞</span><strong>0</strong><small>CAVITY</small></button>
+        <button type="button" data-class-card="Crack"><span>裂纹</span><strong>0</strong><small>CRACK</small></button>
+        <button type="button" data-class-card="Tooth"><span>牙齿</span><strong>0</strong><small>TOOTH</small></button>
+      </div>
+    </section>
+
+    <section class="model-detail-section">
+      <div class="model-section-head">
+        <div><p class="panel-index">INSTANCE DETAIL</p><h2>候选区域明细</h2></div>
+        <p id="model-detail-count">0 项</p>
+      </div>
+      <div class="model-detail-table-wrap">
+        <table class="model-detail-table">
+          <thead><tr><th>序号</th><th>类别</th><th>置信度</th><th>坐标范围</th><th>来源模型</th></tr></thead>
+          <tbody id="model-detail-body"><tr><td colspan="5">完成分析后显示逐项结果。</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="model-source-section">
+      <div class="model-section-head">
+        <div><p class="panel-index">IMAGE SOURCE</p><h2>最近影像</h2></div>
+        <a href="detections.html">管理全部影像</a>
+      </div>
+      <div id="model-image-rail" class="model-image-rail"><p>正在读取影像…</p></div>
+    </section>
+
+    <p class="medical-note">分析任务由云端安全队列调度，模型权重和 GPU 推理均保留在已配置的本地电脑；网站不在云服务器加载 PyTorch。</p>
+  </main>
+
+  <dialog id="local-upload-dialog" class="modal local-upload-dialog">
+    <form id="local-upload-form" enctype="multipart/form-data">
+      <div class="local-upload-head">
+        <div><p class="panel-index">LOCAL IMAGE INTAKE</p><h2>上传本地影像</h2></div>
+        <button class="text-button local-upload-close" type="button">关闭</button>
+      </div>
+      <div class="local-upload-layout">
+        <div class="local-upload-intake">
+          <input id="local-upload-file" class="local-upload-file" name="file" type="file" accept="image/jpeg,image/png,image/webp" required>
+          <label id="local-upload-drop" class="local-upload-drop" for="local-upload-file" tabindex="0">
+            <span id="local-upload-empty" class="local-upload-empty"><i aria-hidden="true"></i><strong>选择或拖入一张口腔照片</strong><span>支持 JPEG、PNG、WebP，单张不超过 8 MB</span></span>
+            <img id="local-upload-preview" class="local-upload-preview" alt="待上传图片预览" hidden>
+            <span id="local-upload-file-meta" class="local-upload-file-meta" hidden><span>—</span><span>—</span></span>
+          </label>
+        </div>
+        <div class="local-upload-settings">
+          <label>归属成员<select id="local-upload-member" name="member_id" required><option value="">请选择成员</option></select></label>
+          <fieldset class="local-upload-mode">
+            <legend>上传后执行</legend>
+            <label><input type="radio" name="upload_mode" value="archive" checked><span><strong>仅上传保存</strong><small>归档原图，稍后在工作台选择模型</small></span></label>
+            <label><input type="radio" name="upload_mode" value="detect"><span><strong>上传并分析</strong><small>保存后立即进入本地模型队列</small></span></label>
+          </fieldset>
+          <label id="local-upload-pipeline" class="local-upload-pipeline" hidden>分析模型<select name="model_pipeline"><option value="caries">龋齿候选检测</option><option value="both">综合检测</option><option value="dental_seg" selected>口腔四类分割</option><option value="calculus_seg">牙结石分割</option><option value="tooth_outline">牙齿轮廓与浅龋暗线</option><option value="all_models">全部模型联合分析</option></select></label>
+          <p class="local-upload-security">上传成功后会自动选中新影像，可立即查看或等待模型结果。</p>
+        </div>
+      </div>
+      <p id="local-upload-message" class="local-upload-message" role="status" aria-live="polite"></p>
+      <div class="modal-actions"><button class="button button-plain local-upload-reset" type="button">重新选择</button><div><button class="button button-plain local-upload-close" type="button">取消</button><button id="local-upload-submit" class="button button-fill" type="submit">上传影像</button></div></div>
+    </form>
+  </dialog>
+
+  <script src="assets/js/model-lab.js?v=20260823-darkline-lab-v1"></script>
+  <script src="assets/js/app.js?v=20260812-outline-v3"></script>
+</body>
+</html>

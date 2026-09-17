@@ -1,0 +1,20 @@
+[Unit]
+Description=Chijing oral-image model worker
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/www/wwwroot/8.138.230.100_667/model_service
+Environment=CHIJING_MODEL_DEVICE=cpu
+Environment=CHIJING_MODEL_PIPELINE=caries
+Environment=CHIJING_TORCH_THREADS=1
+Environment=CHIJING_MODEL_INTERVAL=3
+Environment=CHIJING_PYTHON=/www/wwwroot/chijing_runtime/model_venv/bin/python
+Environment=MALLOC_ARENA_MAX=1
+Environment=OMP_NUM_THREADS=1
+ExecStart=/bin/bash /www/wwwroot/8.138.230.100_667/model_service/run_worker.sh --once
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Wi-Fi Settings</title>
+    <link rel="stylesheet" href="wifi-settings.css" />
+  </head>
+  <body>
+    <main id="wifi-screen" class="wifi-screen" aria-label="DentiScope Wi-Fi settings">
+      <header class="topbar">
+        <button class="back-control" type="button" aria-label="Back">
+          <img src="../assets/back.svg" alt="" />
+        </button>
+        <h1>WI-FI</h1>
+      </header>
+
+      <nav class="wifi-actions" aria-label="Wi-Fi options">
+        <a class="wifi-action" href="#saved-networks">
+          <img class="action-icon" src="../assets/wifi.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">SAVED WI-FI</span>
+            <span class="action-description">Manage known networks</span>
+          </span>
+        </a>
+
+        <button class="wifi-action" type="button">
+          <img class="action-icon" src="../assets/add.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">ADD NEW WI-FI</span>
+            <span class="action-description">Connect to a new network</span>
+          </span>
+        </button>
+
+        <button class="wifi-action" type="button">
+          <img class="action-icon" src="../assets/check.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">SET DEFAULT WI-FI</span>
+            <span class="action-description">Choose network for startup</span>
+          </span>
+        </button>
+      </nav>
+
+      <footer>DentiScope</footer>
+
+      <section id="saved-networks" class="modal" aria-label="Saved Wi-Fi networks">
+        <a class="modal-backdrop" href="#wifi-screen" aria-label="Close saved networks"></a>
+        <div class="dialog saved-dialog" role="dialog" aria-modal="true" aria-labelledby="saved-title">
+          <div class="dialog-header">
+            <h2 id="saved-title">SAVED WI-FI</h2>
+            <a class="icon-control" href="#wifi-screen" aria-label="Close">
+              <img src="../assets/close.svg" alt="" />
+            </a>
+          </div>
+
+          <div class="network-list">
+            <a class="network-row" href="#password-dentiscope-lab">
+              <img src="../assets/wifi.svg" alt="" />
+              <span>DENTISCOPE LAB</span>
+              <img class="chevron" src="../assets/chevron-right.svg" alt="" />
+            </a>
+            <a class="network-row" href="#password-clinic-5g">
+              <img src="../assets/wifi.svg" alt="" />
+              <span>CLINIC 5G</span>
+              <img class="chevron" src="../assets/chevron-right.svg" alt="" />
+            </a>
+            <a class="network-row" href="#password-staff-net">
+              <img src="../assets/wifi.svg" alt="" />
+              <span>STAFF NET</span>
+              <img class="chevron" src="../assets/chevron-right.svg" alt="" />
+            </a>
+          </div>
+          <p class="dialog-helper">Select a network to continue</p>
+        </div>
+      </section>
+
+      <section id="password-dentiscope-lab" class="modal password-modal" aria-label="DentiScope Lab password">
+        <a class="modal-backdrop" href="#saved-networks" aria-label="Back to saved networks"></a>
+        <div class="dialog password-dialog" role="dialog" aria-modal="true" aria-labelledby="lab-title">
+          <div class="dialog-header">
+            <h2 id="lab-title">DENTISCOPE LAB</h2>
+            <a class="icon-control" href="#saved-networks" aria-label="Close">
+              <img src="../assets/close.svg" alt="" />
+            </a>
+          </div>
+          <label class="field-label" for="password-dentiscope-lab-input">PASSWORD</label>
+          <input id="password-dentiscope-lab-input" class="password-input" type="text" value="DentalScope2026" />
+          <div class="dialog-actions">
+            <a class="dialog-button secondary" href="#saved-networks">BACK</a>
+            <a class="dialog-button primary" href="#wifi-screen">CONNECT</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="password-clinic-5g" class="modal password-modal" aria-label="Clinic 5G password">
+        <a class="modal-backdrop" href="#saved-networks" aria-label="Back to saved networks"></a>
+        <div class="dialog password-dialog" role="dialog" aria-modal="true" aria-labelledby="clinic-title">
+          <div class="dialog-header">
+            <h2 id="clinic-title">CLINIC 5G</h2>
+            <a class="icon-control" href="#saved-networks" aria-label="Close">
+              <img src="../assets/close.svg" alt="" />
+            </a>
+          </div>
+          <label class="field-label" for="password-clinic-5g-input">PASSWORD</label>
+          <input id="password-clinic-5g-input" class="password-input" type="text" value="Clinic-5G-2026" />
+          <div class="dialog-actions">
+            <a class="dialog-button secondary" href="#saved-networks">BACK</a>
+            <a class="dialog-button primary" href="#wifi-screen">CONNECT</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="password-staff-net" class="modal password-modal" aria-label="Staff Net password">
+        <a class="modal-backdrop" href="#saved-networks" aria-label="Back to saved networks"></a>
+        <div class="dialog password-dialog" role="dialog" aria-modal="true" aria-labelledby="staff-title">
+          <div class="dialog-header">
+            <h2 id="staff-title">STAFF NET</h2>
+            <a class="icon-control" href="#saved-networks" aria-label="Close">
+              <img src="../assets/close.svg" alt="" />
+            </a>
+          </div>
+          <label class="field-label" for="password-staff-net-input">PASSWORD</label>
+          <input id="password-staff-net-input" class="password-input" type="text" value="Staff@Denti" />
+          <div class="dialog-actions">
+            <a class="dialog-button secondary" href="#saved-networks">BACK</a>
+            <a class="dialog-button primary" href="#wifi-screen">CONNECT</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="edit-keyboard" aria-label="Password editor keyboard">
+        <div class="key-row ten-keys">
+          <button type="button" data-edit-key="1">1</button><button type="button" data-edit-key="2">2</button><button type="button" data-edit-key="3">3</button><button type="button" data-edit-key="4">4</button><button type="button" data-edit-key="5">5</button><button type="button" data-edit-key="6">6</button><button type="button" data-edit-key="7">7</button><button type="button" data-edit-key="8">8</button><button type="button" data-edit-key="9">9</button><button type="button" data-edit-key="0">0</button>
+        </div>
+        <div class="key-row ten-keys">
+          <button type="button" data-edit-key="Q">Q</button><button type="button" data-edit-key="W">W</button><button type="button" data-edit-key="E">E</button><button type="button" data-edit-key="R">R</button><button type="button" data-edit-key="T">T</button><button type="button" data-edit-key="Y">Y</button><button type="button" data-edit-key="U">U</button><button type="button" data-edit-key="I">I</button><button type="button" data-edit-key="O">O</button><button type="button" data-edit-key="P">P</button>
+        </div>
+        <div class="key-row nine-keys">
+          <button type="button" data-edit-key="A">A</button><button type="button" data-edit-key="S">S</button><button type="button" data-edit-key="D">D</button><button type="button" data-edit-key="F">F</button><button type="button" data-edit-key="G">G</button><button type="button" data-edit-key="H">H</button><button type="button" data-edit-key="J">J</button><button type="button" data-edit-key="K">K</button><button type="button" data-edit-key="L">L</button>
+        </div>
+        <div class="key-row letter-bottom">
+          <button class="utility-key" type="button" data-edit-action="shift" aria-pressed="false">SHIFT</button><button type="button" data-edit-key="Z">Z</button><button type="button" data-edit-key="X">X</button><button type="button" data-edit-key="C">C</button><button type="button" data-edit-key="V">V</button><button type="button" data-edit-key="B">B</button><button type="button" data-edit-key="N">N</button><button type="button" data-edit-key="M">M</button>
+        </div>
+        <div class="key-row utilities">
+          <button class="utility-key" type="button" data-edit-action="space">SPACE</button><button class="utility-key" type="button" data-edit-action="backspace">BACKSPACE</button><button class="utility-key connect-key" type="button" data-edit-action="connect">CONNECT</button>
+        </div>
+      </section>
+    </main>
+    <script src="wifi-settings.js"></script>
+  </body>
+</html>

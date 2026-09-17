@@ -1,0 +1,269 @@
+:root {
+  --screen-width: 720px;
+  --screen-height: 1080px;
+  --background: #0b0b0b;
+  --surface: #292928;
+  --surface-pressed: #3d3d3b;
+  --ink: #f5f4f1;
+  --muted-ink: #adadab;
+  --rule: #565655;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: var(--screen-width);
+  min-height: var(--screen-height);
+  margin: 0;
+  background: var(--background);
+}
+
+body {
+  display: grid;
+  place-items: start center;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.screen {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  overflow: hidden;
+  background: var(--background);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  height: 141px;
+  padding-left: 20px;
+}
+
+.topbar h1,
+.dialog h2,
+.slider-value {
+  margin: 0;
+}
+
+.topbar h1 {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.back-control {
+  display: grid;
+  width: 95px;
+  height: 95px;
+  border-radius: 22px;
+  place-items: center;
+  background: var(--surface);
+}
+
+.back-control img {
+  width: 58px;
+  height: 58px;
+}
+
+.settings-actions {
+  display: grid;
+  gap: 24px;
+  width: 580px;
+  margin: 39px auto 0;
+}
+
+.settings-card {
+  display: flex;
+  align-items: center;
+  width: 580px;
+  height: 171px;
+  padding: 0 39px;
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.card-icon {
+  width: 86px;
+  height: 86px;
+  flex: 0 0 86px;
+}
+
+.card-copy {
+  display: grid;
+  gap: 13px;
+  margin-left: 43px;
+}
+
+.card-title {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+.card-description {
+  color: var(--muted-ink);
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.brand {
+  position: absolute;
+  right: 61px;
+  bottom: 32px;
+  left: 61px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted-ink);
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  visibility: hidden;
+  background: rgb(0 0 0 / 73%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+
+.modal:target {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 180ms ease;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.dialog {
+  position: absolute;
+  top: 290px;
+  left: 50%;
+  width: 540px;
+  padding: 44px 51px 42px;
+  border: 1px solid #4a4a48;
+  border-radius: 32px;
+  transform: translateX(-50%);
+  background: rgb(43 43 42 / 96%);
+  backdrop-filter: blur(16px);
+  text-align: center;
+}
+
+.dialog-icon {
+  width: 96px;
+  height: 96px;
+}
+
+.dialog h2 {
+  margin-top: 22px;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: 1.1px;
+}
+
+.range-input {
+  --level: 50%;
+  display: block;
+  width: 100%;
+  height: 16px;
+  margin-top: 59px;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--ink) 0 var(--level), #4a4a48 var(--level) 100%);
+  cursor: pointer;
+}
+
+.range-input::-webkit-slider-thumb {
+  width: 44px;
+  height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.range-input::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.range-input::-moz-range-track {
+  height: 16px;
+  border-radius: 999px;
+  background: #4a4a48;
+}
+
+.range-input::-moz-range-progress {
+  height: 16px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.range-input:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 7px;
+}
+
+.slider-value {
+  display: block;
+  margin-top: 38px;
+  font-size: 35px;
+  font-weight: 400;
+}
+
+.done-button {
+  display: grid;
+  height: 87px;
+  margin-top: 41px;
+  border-radius: 14px;
+  place-items: center;
+  background: var(--ink);
+  color: #111110;
+  font-size: 29px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.back-control:focus-visible,
+.settings-card:focus-visible,
+.done-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 5px;
+}
+
+.back-control:active,
+.settings-card:active {
+  background: var(--surface-pressed);
+}
+
+.done-button:active {
+  background: #d7d6d3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .modal:target {
+    transition: none;
+  }
+}

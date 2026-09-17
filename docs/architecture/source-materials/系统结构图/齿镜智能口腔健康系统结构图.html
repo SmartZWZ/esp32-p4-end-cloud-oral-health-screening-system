@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>齿镜智能口腔健康系统结构图</title>
+  <style>
+    :root{
+      --paper:#f7f9fc;--card:#fff;--ink:#162033;--muted:#667085;--quiet:#98a2b3;
+      --rule:#d8dee8;--blue:#2674d9;--blue-wash:#f3f7fe;
+      --purple:#7557c8;--purple-wash:#f6f3fc;--orange:#d97706;
+      --green:#21895b;--green-wash:#f2f8f5;--gray:#667085;
+      --shadow:0 18px 44px rgba(23,32,51,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{overflow:hidden;background:#e9edf3;color:var(--ink);font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif}
+    button{font:inherit}
+    .toolbar{
+      position:fixed;z-index:100;left:50%;top:14px;display:flex;gap:8px;align-items:center;
+      transform:translateX(-50%);padding:7px;border:1px solid #d3dae5;border-radius:14px;
+      background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(16,24,40,.12);backdrop-filter:blur(12px)
+    }
+    .toolbar button{
+      height:34px;padding:0 13px;border:1px solid #d8dee8;border-radius:9px;
+      background:#fff;color:#344054;cursor:pointer;font-size:13px
+    }
+    .toolbar button:hover,.toolbar button.is-active{border-color:#172033;background:#172033;color:#fff}
+    .toolbar .tip{padding:0 9px;color:#667085;font-size:12px;white-space:nowrap}
+    .viewport{position:relative;width:100vw;height:100vh;overflow:hidden}
+    .diagram{
+      position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;
+      transform-origin:0 0;background:var(--paper)
+    }
+    .diagram::before,.diagram::after{
+      content:"";position:absolute;border-radius:50%;pointer-events:none
+    }
+    .diagram::before{right:-60px;top:-115px;width:330px;height:330px;background:#eef4ff}
+    .diagram::after{right:-80px;bottom:-165px;width:360px;height:360px;background:#f2f0fb}
+    .title{position:absolute;z-index:3;left:70px;top:43px}
+    .title h1{margin:0;font-size:43px;line-height:1.2;letter-spacing:-1.8px}
+    .title p{margin:12px 0 0;color:var(--muted);font-size:17px}
+    .overview{
+      position:absolute;z-index:3;right:70px;top:49px;width:204px;height:48px;display:grid;place-items:center;
+      border:1px solid var(--rule);border-radius:24px;background:#fff;color:var(--muted);
+      font:700 12px/1 Arial,sans-serif;letter-spacing:2px
+    }
+    .column-label{
+      position:absolute;z-index:3;top:154px;color:var(--muted);
+      font:700 13px/1 Arial,sans-serif;letter-spacing:2px
+    }
+    .label-user{left:70px}.label-entry{left:300px}.label-cloud{left:752px}.label-ai{left:1428px}
+    .card{position:absolute;z-index:3;border:1px solid var(--rule);border-radius:28px;background:var(--card);box-shadow:var(--shadow)}
+    .user-card{left:70px;top:190px;width:180px;height:655px;padding:94px 34px 0;text-align:center}
+    .user-icon{width:106px;height:106px;margin:0 auto 27px;display:grid;place-items:center;border-radius:50%;background:#eef2f7}
+    .user-card h2{margin:0;font-size:24px}
+    .user-card p{margin:16px 0 0;color:var(--muted);font-size:16px;line-height:2}
+    .user-card hr{margin:38px 0 27px;border:0;border-top:1px solid #e4e8ef}
+    .user-card small{display:block;color:var(--muted);font-size:14px;line-height:2.1}
+    .entry-card{left:300px;width:350px;height:305px;padding:24px}
+    .web-card{top:190px}.device-card{top:540px}
+    .visual-slot{
+      position:relative;width:302px;height:128px;overflow:hidden;display:grid;place-items:center;
+      border:1px dashed transparent;border-radius:18px;background:#f1f5fa;cursor:pointer
+    }
+    .visual-slot:hover{border-color:#98a2b3}
+    .visual-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
+    .visual-slot.has-image img{display:block}.visual-slot.has-image .default-visual{display:none}
+    .slot-hint{
+      position:absolute;right:9px;bottom:8px;padding:4px 7px;border-radius:8px;
+      background:rgba(22,32,51,.75);color:#fff;font-size:10px;opacity:0;transition:.2s
+    }
+    .visual-slot:hover .slot-hint{opacity:1}
+    .entry-card h2{margin:19px 4px 0;font-size:24px}
+    .entry-card p{margin:12px 4px 0;color:var(--muted);font-size:16px}
+    .entry-card small{display:block;margin:13px 4px 0;color:var(--muted);font-size:14px}
+    .cloud-card{left:752px;top:190px;width:570px;height:655px;overflow:hidden}
+    .cloud-head{height:92px;padding:18px 32px;display:flex;gap:19px;align-items:center;background:#172033;color:#fff}
+    .cloud-mark{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--blue)}
+    .cloud-head h2{margin:0;font-size:25px}.cloud-head p{margin:7px 0 0;color:#aab6c8;font:11px Arial,sans-serif;letter-spacing:2px}
+    .cloud-modules{display:grid;gap:24px;padding:31px}
+    .cloud-module{height:126px;padding:23px 22px;display:grid;grid-template-columns:56px 1fr;gap:22px;border:1px solid #dfe4ec;border-radius:20px;background:#f6f8fb}
+    .cloud-module.image{border-color:#d4e1f5;background:var(--blue-wash)}
+    .cloud-module.assistant{border-color:#e0d8f1;background:var(--purple-wash)}
+    .module-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:14px;background:#e9eef5}
+    .image .module-icon{background:#e2edfc}.assistant .module-icon{background:#ece6f8}
+    .module-copy h3{margin:3px 0 0;font-size:19px}.module-copy p{margin:12px 0 0;color:var(--muted);font-size:14px}
+    .module-copy small{display:block;margin-top:14px;color:var(--quiet);font:10px Arial,sans-serif;letter-spacing:2px}
+    .cloud-note{position:absolute;left:31px;bottom:27px;display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
+    .cloud-note i{width:17px;height:17px;display:grid;place-items:center;border-radius:50%;background:#dff3e8;color:var(--green);font-style:normal;font-size:11px;font-weight:700}
+    .ai-card{left:1428px;top:190px;width:422px;height:415px;padding:28px 31px}
+    .ai-card h2,.data-card h2{margin:0;font-size:23px}.eyebrow{margin:8px 0 20px;color:var(--quiet);font:10px Arial,sans-serif;letter-spacing:2px}
+    .ai-stack{display:grid;gap:17px}
+    .ai-service{height:83px;padding:14px 16px;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;border:1px solid #d4e1f5;border-radius:17px;background:var(--blue-wash)}
+    .ai-service.voice{border-color:#e0d8f1;background:var(--purple-wash)}
+    .ai-service.dentist{height:91px;border-color:#d5eadd;background:var(--green-wash)}
+    .service-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#e2edfc}
+    .voice .service-icon{background:#ece6f8}.dentist .service-icon{background:#dff3e8}
+    .ai-service h3{margin:0;font-size:17px}.ai-service p{margin:7px 0 0;color:var(--muted);font-size:13px}
+    .ai-service strong{display:block;margin-top:5px;color:var(--green);font-size:12px}
+    .data-card{left:1428px;top:635px;width:422px;height:210px;padding:35px 31px}
+    .data-head{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:center}
+    .data-card p{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .data-card hr{margin:22px 0 15px;border:0;border-top:1px solid #e4e8ef}
+    .data-card small{display:block;color:var(--muted);font-size:14px;line-height:2}
+    .connections{position:absolute;z-index:2;inset:0;width:1920px;height:1080px;pointer-events:none}
+    .flow-pill{position:absolute;z-index:5;padding:7px 12px;border-radius:16px;font-size:12px;font-weight:700;white-space:nowrap}
+    .pill-image{left:665px;top:476px;background:#e7effc;color:#1f5eaf}
+    .pill-voice{left:665px;top:700px;background:#eee9f8;color:#6045a8}
+    .pill-control{left:676px;top:762px;background:#fff1db;color:#a75a05}
+    .pill-ai-image{left:1335px;top:298px;background:#e7effc;color:#1f5eaf}
+    .pill-ai-voice{left:1338px;top:397px;background:#eee9f8;color:#6045a8}
+    .pill-data{left:1338px;top:752px;background:#eef1f5;color:var(--muted)}
+    .legend{position:absolute;z-index:3;left:70px;top:915px}
+    .legend>span{color:var(--muted);font:700 11px Arial,sans-serif;letter-spacing:2px}
+    .legend-list{display:flex;gap:44px;margin-top:29px}
+    .legend-item{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
+    .legend-line{width:38px;border-top:4px solid var(--blue)}
+    .legend-line.purple{border-color:var(--purple)}.legend-line.orange{border-top:3px dashed var(--orange)}
+    .legend-line.gray{border-top:3px solid var(--gray)}.legend-line.green{border-color:var(--green)}
+    .summary{position:absolute;z-index:3;right:70px;top:925px;width:528px;height:72px;padding:17px 24px;border:1px solid var(--rule);border-radius:20px;background:#fff}
+    .summary strong{font-size:15px}.summary p{margin:8px 0 0;color:var(--muted);font-size:13px}
+    .footer{position:absolute;z-index:3;left:70px;right:70px;bottom:38px;display:flex;justify-content:space-between;color:var(--quiet);font:10px Arial,sans-serif;letter-spacing:2px}
+    [contenteditable="true"]{outline:2px dashed rgba(38,116,217,.45);outline-offset:3px;border-radius:3px}
+    .editing .visual-slot{border-color:#98a2b3}
+    @media print{
+      @page{size:16in 9in;margin:0}
+      html,body{width:16in;height:9in;overflow:hidden;background:#fff}
+      .toolbar{display:none!important}.viewport{width:16in;height:9in}
+      .diagram{transform:scale(.8)!important;transform-origin:0 0}
+      .slot-hint{display:none!important}
+    }
+    @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="toolbar" aria-label="结构图编辑工具">
+    <button id="editText" type="button">编辑文字</button>
+    <button id="saveEdits" type="button">保存修改</button>
+    <button id="resetEdits" type="button">恢复原稿</button>
+    <button id="fitCanvas" type="button">适应窗口</button>
+    <button id="printDiagram" type="button">打印 / PDF</button>
+    <span class="tip">点击网页或硬件插图可替换图片</span>
+  </div>
+
+  <div id="viewport" class="viewport">
+    <main id="diagram" class="diagram">
+      <header class="title">
+        <h1 data-editable data-key="title">齿镜智能口腔健康系统</h1>
+        <p data-editable data-key="subtitle">从口腔影像采集、智能分析到语音交互与设备控制</p>
+      </header>
+      <div class="overview">SYSTEM OVERVIEW</div>
+
+      <div class="column-label label-user">USER</div>
+      <div class="column-label label-entry">APPLICATION &amp; DEVICE</div>
+      <div class="column-label label-cloud">CLOUD PLATFORM</div>
+      <div class="column-label label-ai">AI SERVICES &amp; DATA</div>
+
+      <section class="card user-card">
+        <div class="user-icon" aria-hidden="true">
+          <svg width="92" height="92" viewBox="0 0 92 92">
+            <circle cx="46" cy="32" r="18" fill="none" stroke="#1e293b" stroke-width="3"/>
+            <path d="M14 83c7-25 20-36 32-36s25 11 32 36" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 data-editable data-key="user-title">用户</h2>
+        <p data-editable data-key="user-actions">网页操作<br>设备使用</p>
+        <hr>
+        <small data-editable data-key="user-goal">家庭成员<br>口腔健康管理</small>
+      </section>
+
+      <section class="card entry-card web-card">
+        <label class="visual-slot" data-slot="web">
+          <input type="file" accept="image/*" hidden>
+          <img alt="网页端替换素材">
+          <svg class="default-visual" width="150" height="105" viewBox="0 0 150 105" aria-hidden="true">
+            <rect x="11" y="4" width="128" height="79" rx="8" fill="#fff" stroke="#1f2a3d" stroke-width="3"/>
+            <line x1="22" y1="23" x2="128" y2="23" stroke="#cbd3df" stroke-width="2"/>
+            <circle cx="29" cy="14" r="3" fill="#2674d9"/>
+            <rect x="25" y="36" width="43" height="32" rx="5" fill="#e7effc"/>
+            <path d="M82 39h37M82 52h31M82 65h23" stroke="#98a2b3" stroke-width="3" stroke-linecap="round"/>
+            <path d="M58 96h34M68 83v13M82 83v13" stroke="#1f2a3d" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <span class="slot-hint">点击替换素材</span>
+        </label>
+        <h2 data-editable data-key="web-title">齿镜网页端</h2>
+        <p data-editable data-key="web-main">管理成员、设备与口腔影像</p>
+        <small data-editable data-key="web-detail">模型工作台 · AI 助手 · AI 牙医</small>
+      </section>
+
+      <section class="card entry-card device-card">
+        <label class="visual-slot" data-slot="device">
+          <input type="file" accept="image/*" hidden>
+          <img alt="硬件端替换素材">
+          <svg class="default-visual" width="160" height="108" viewBox="0 0 160 108" aria-hidden="true">
+            <path d="M13 27h25M122 27h25M13 82h25M122 82h25" stroke="#98a2b3" stroke-width="3" stroke-linecap="round"/>
+            <rect x="36" y="5" width="88" height="98" rx="19" fill="#fff" stroke="#1f2a3d" stroke-width="3"/>
+            <rect x="49" y="19" width="62" height="53" rx="9" fill="#e7effc"/>
+            <circle cx="80" cy="45" r="17" fill="#fff" stroke="#2674d9" stroke-width="3"/>
+            <circle cx="80" cy="45" r="7" fill="#2674d9"/>
+            <circle cx="80" cy="88" r="4" fill="#1f2a3d"/>
+          </svg>
+          <span class="slot-hint">点击替换素材</span>
+        </label>
+        <h2 data-editable data-key="device-title">齿镜智能硬件</h2>
+        <p data-editable data-key="device-main">ESP32-P4 · OV5647</p>
+        <small data-editable data-key="device-detail">摄像头 · 麦克风 · 屏幕 · 扬声器</small>
+      </section>
+
+      <section class="card cloud-card">
+        <header class="cloud-head">
+          <span class="cloud-mark" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 13c2-7 12-7 14 0M7 17h10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <div>
+            <h2 data-editable data-key="cloud-title">齿镜云端平台</h2>
+            <p>SERVICE ORCHESTRATION</p>
+          </div>
+        </header>
+        <div class="cloud-modules">
+          <article class="cloud-module">
+            <span class="module-icon"><svg width="31" height="31" viewBox="0 0 31 31"><path d="M7 9h17M11 16h10M8 23h15" fill="none" stroke="#344054" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+            <div class="module-copy">
+              <h3 data-editable data-key="cloud-business-title">账号、成员与设备</h3>
+              <p data-editable data-key="cloud-business-copy">登录注册 · 家庭成员 · 设备绑定 · 数据隔离</p>
+              <small>ACCOUNT / MEMBER / DEVICE</small>
+            </div>
+          </article>
+          <article class="cloud-module image">
+            <span class="module-icon"><svg width="31" height="31" viewBox="0 0 31 31"><rect x="4" y="5" width="23" height="21" rx="4" fill="none" stroke="#2674d9" stroke-width="2.3"/><path d="M7 22l6-7 5 5 4-4 5 6" fill="none" stroke="#2674d9" stroke-width="2"/></svg></span>
+            <div class="module-copy">
+              <h3 data-editable data-key="cloud-image-title">影像与模型任务</h3>
+              <p data-editable data-key="cloud-image-copy">影像上传 · 历史管理 · 模型调度 · 结果汇总</p>
+              <small>IMAGE / MODEL TASK</small>
+            </div>
+          </article>
+          <article class="cloud-module assistant">
+            <span class="module-icon"><svg width="31" height="31" viewBox="0 0 31 31"><path d="M5 7h21v16H15l-6 5v-5H5z" fill="none" stroke="#7557c8" stroke-width="2.3" stroke-linejoin="round"/></svg></span>
+            <div class="module-copy">
+              <h3 data-editable data-key="cloud-ai-title">AI 助手与设备服务</h3>
+              <p data-editable data-key="cloud-ai-copy">连续对话 · 信息读取 · 语音交互 · 指令下发</p>
+              <small>AI ASSISTANT / DEVICE SERVICE</small>
+            </div>
+          </article>
+        </div>
+        <div class="cloud-note"><i>✓</i><span data-editable data-key="cloud-note">统一处理网页端与硬件端的业务请求</span></div>
+      </section>
+
+      <section class="card ai-card">
+        <h2 data-editable data-key="ai-title">智能分析服务</h2>
+        <p class="eyebrow">INTELLIGENCE CAPABILITIES</p>
+        <div class="ai-stack">
+          <article class="ai-service">
+            <span class="service-icon"><svg width="25" height="25" viewBox="0 0 25 25"><path d="M3 13c6-8 13-8 19 0-6 8-13 8-19 0z" fill="none" stroke="#2674d9" stroke-width="2"/><circle cx="12.5" cy="13" r="3.5" fill="#2674d9"/></svg></span>
+            <div><h3 data-editable data-key="vision-title">口腔影像模型服务</h3><p data-editable data-key="vision-copy">识别与标注口腔影像</p></div>
+          </article>
+          <article class="ai-service voice">
+            <span class="service-icon"><svg width="25" height="25" viewBox="0 0 25 25"><path d="M6 11v4M12 7v12M18 10v6" stroke="#7557c8" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+            <div><h3 data-editable data-key="voice-title">实时语音 AI 服务</h3><p data-editable data-key="voice-copy">语音识别 · 理解 · 合成</p></div>
+          </article>
+          <article class="ai-service dentist">
+            <span class="service-icon"><svg width="25" height="25" viewBox="0 0 25 25"><path d="M5 4c4-4 11-4 15 0 4 6-2 18-5 20-2-7-4-7-6 0C6 22 1 10 5 4z" fill="none" stroke="#21895b" stroke-width="1.8"/></svg></span>
+            <div><h3 data-editable data-key="dentist-title">AI 牙医</h3><p data-editable data-key="dentist-copy">多图与历史记录综合分析</p><strong data-editable data-key="dentist-output">输出口腔健康分析报告</strong></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card data-card">
+        <div class="data-head">
+          <svg width="58" height="72" viewBox="0 0 58 72" aria-hidden="true">
+            <ellipse cx="29" cy="11" rx="27" ry="10" fill="#e9eef5" stroke="#667085" stroke-width="2"/>
+            <path d="M2 11v47c0 6 12 11 27 11s27-5 27-11V11M2 35c0 6 12 10 27 10s27-4 27-10" fill="none" stroke="#667085" stroke-width="2"/>
+          </svg>
+          <div><h2 data-editable data-key="data-title">云端数据中心</h2><p data-editable data-key="data-copy">统一保存并隔离用户数据</p></div>
+        </div>
+        <hr>
+        <small data-editable data-key="data-detail">账号 · 家庭成员 · 设备 · 口腔影像<br>检测结果 · AI 报告 · 对话记录</small>
+      </section>
+
+      <svg class="connections" viewBox="0 0 1920 1080" aria-label="系统信息流">
+        <defs>
+          <marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#2674d9"/></marker>
+          <marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#7557c8"/></marker>
+          <marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#d97706"/></marker>
+          <marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#667085"/></marker>
+        </defs>
+        <path d="M250 352H282Q290 352 290 344V327Q290 319 300 319" fill="none" stroke="#667085" stroke-width="2.5" marker-end="url(#a-gray)"/>
+        <path d="M250 642H282Q290 642 290 650V667Q290 675 300 675" fill="none" stroke="#667085" stroke-width="2.5" marker-end="url(#a-gray)"/>
+        <path d="M650 365H714Q730 365 730 381V510Q730 528 752 528" fill="none" stroke="#2674d9" stroke-width="4" marker-end="url(#a-blue)"/>
+        <path d="M650 676H706Q730 676 730 652V558Q730 538 752 538" fill="none" stroke="#2674d9" stroke-width="4" marker-end="url(#a-blue)"/>
+        <path d="M650 730H714Q730 730 730 714V688Q730 678 752 678" fill="none" stroke="#7557c8" stroke-width="4" marker-end="url(#a-purple)"/>
+        <path d="M784 727H710Q686 727 686 751V781Q686 796 650 796" fill="none" stroke="#d97706" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#a-orange)"/>
+        <path d="M1322 518H1370Q1388 518 1388 452V323H1428" fill="none" stroke="#2674d9" stroke-width="4" marker-start="url(#a-blue)" marker-end="url(#a-blue)"/>
+        <path d="M1322 678H1374Q1392 678 1392 650V423H1428" fill="none" stroke="#7557c8" stroke-width="4" marker-start="url(#a-purple)" marker-end="url(#a-purple)"/>
+        <path d="M1322 558H1362Q1382 558 1382 527H1428" fill="none" stroke="#21895b" stroke-width="4" marker-start="url(#a-gray)" marker-end="url(#a-gray)"/>
+        <path d="M1322 790H1378Q1398 790 1398 740H1428" fill="none" stroke="#667085" stroke-width="3" marker-start="url(#a-gray)" marker-end="url(#a-gray)"/>
+      </svg>
+
+      <span class="flow-pill pill-image">口腔影像</span>
+      <span class="flow-pill pill-voice">语音交互</span>
+      <span class="flow-pill pill-control">设备控制指令</span>
+      <span class="flow-pill pill-ai-image">影像与结果</span>
+      <span class="flow-pill pill-ai-voice">语音与回复</span>
+      <span class="flow-pill pill-data">业务数据</span>
+
+      <section class="legend">
+        <span>INFORMATION FLOW</span>
+        <div class="legend-list">
+          <div class="legend-item"><i class="legend-line"></i><span>口腔影像</span></div>
+          <div class="legend-item"><i class="legend-line purple"></i><span>语音与对话</span></div>
+          <div class="legend-item"><i class="legend-line orange"></i><span>设备控制</span></div>
+          <div class="legend-item"><i class="legend-line gray"></i><span>业务数据</span></div>
+          <div class="legend-item"><i class="legend-line green"></i><span>分析报告</span></div>
+        </div>
+      </section>
+
+      <aside class="summary">
+        <strong data-editable data-key="summary-title">一套平台连接网页、智能硬件与 AI 服务</strong>
+        <p data-editable data-key="summary-copy">完成口腔数据采集、分析、管理和交互反馈</p>
+      </aside>
+      <footer class="footer"><span>DENTISCOPE · INTELLIGENT ORAL HEALTH SYSTEM</span><span>齿镜项目系统总览</span></footer>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const diagram = document.querySelector('#diagram');
+      const viewport = document.querySelector('#viewport');
+      const storagePrefix = 'chijing-system-diagram:';
+      let editing = false;
+
+      function fit() {
+        const scale = Math.min(innerWidth / 1920, innerHeight / 1080);
+        const left = Math.max(0, (innerWidth - 1920 * scale) / 2);
+        const top = Math.max(0, (innerHeight - 1080 * scale) / 2);
+        diagram.style.transform = `translate(${left / scale}px,${top / scale}px) scale(${scale})`;
+      }
+
+      function setEditing(enabled) {
+        editing = enabled;
+        diagram.classList.toggle('editing', enabled);
+        document.querySelector('#editText').classList.toggle('is-active', enabled);
+        document.querySelector('#editText').textContent = enabled ? '结束文字编辑' : '编辑文字';
+        document.querySelectorAll('[data-editable]').forEach(node => {
+          node.contentEditable = enabled ? 'true' : 'false';
+        });
+      }
+
+      function save() {
+        document.querySelectorAll('[data-editable]').forEach(node => {
+          localStorage.setItem(storagePrefix + node.dataset.key, node.innerHTML);
+        });
+        document.querySelectorAll('[data-slot]').forEach(slot => {
+          const src = slot.querySelector('img').src;
+          if (src.startsWith('data:')) {
+            try { localStorage.setItem(storagePrefix + 'image:' + slot.dataset.slot, src); } catch (_) {}
+          }
+        });
+        alert('当前文字和替换图片已保存在本浏览器。');
+      }
+
+      function restore() {
+        document.querySelectorAll('[data-editable]').forEach(node => {
+          const saved = localStorage.getItem(storagePrefix + node.dataset.key);
+          if (saved !== null) node.innerHTML = saved;
+        });
+        document.querySelectorAll('[data-slot]').forEach(slot => {
+          const saved = localStorage.getItem(storagePrefix + 'image:' + slot.dataset.slot);
+          if (saved) {
+            const image = slot.querySelector('img');
+            image.src = saved;
+            slot.classList.add('has-image');
+          }
+        });
+      }
+
+      document.querySelectorAll('[data-slot] input').forEach(input => {
+        input.addEventListener('change', event => {
+          const file = event.currentTarget.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            const slot = event.currentTarget.closest('[data-slot]');
+            slot.querySelector('img').src = String(reader.result);
+            slot.classList.add('has-image');
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      document.querySelector('#editText').addEventListener('click', () => setEditing(!editing));
+      document.querySelector('#saveEdits').addEventListener('click', save);
+      document.querySelector('#resetEdits').addEventListener('click', () => {
+        if (!confirm('恢复原稿会清除当前浏览器保存的文字和替换图片，是否继续？')) return;
+        Object.keys(localStorage).filter(key => key.startsWith(storagePrefix)).forEach(key => localStorage.removeItem(key));
+        location.reload();
+      });
+      document.querySelector('#fitCanvas').addEventListener('click', fit);
+      document.querySelector('#printDiagram').addEventListener('click', () => window.print());
+      addEventListener('resize', fit);
+      addEventListener('beforeprint', () => diagram.style.transform = '');
+      addEventListener('afterprint', fit);
+      restore();
+      fit();
+    })();
+  </script>
+</body>
+</html>

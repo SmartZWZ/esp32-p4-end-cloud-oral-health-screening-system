@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN" data-page="device-assistant" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>设备对话记录 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/device-assistant.css">
+  <link rel="stylesheet" href="assets/css/assistant-memory.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a class="active" href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+  <main class="app-main device-assistant-main">
+    <section class="device-assistant-head">
+      <div><p class="kicker">DEVICE VOICE LEDGER</p><h1>设备对话记录</h1></div>
+      <div class="device-assistant-head-side">
+        <p>此处只展示齿镜硬件端的语音记录；网页端助手的对话独立保存在“助手”页面，二者不会混合。</p>
+        <div class="device-assistant-head-actions"><button id="device-assistant-new" class="button button-plain" type="button">新建设备对话</button></div>
+      </div>
+    </section>
+    <section class="device-assistant-layout">
+      <aside class="device-assistant-sidebar" aria-label="设备和对话筛选">
+        <div class="device-assistant-filter-head"><span>已绑定设备</span><a href="devices.html">设备管理</a></div>
+        <div id="device-assistant-devices" class="device-assistant-devices"><p>正在读取设备…</p></div>
+        <div class="device-assistant-filter-head device-assistant-history-head"><span>设备端会话</span><span id="device-assistant-count">—</span></div>
+        <div id="device-assistant-conversations" class="device-assistant-conversations"><p>正在读取记录…</p></div>
+      </aside>
+      <section class="device-assistant-console" aria-label="设备端对话详情">
+        <header class="device-assistant-console-head">
+          <div><p id="device-assistant-title">选择一条设备对话</p><span id="device-assistant-meta">设备端语音对话会在这里按设备独立归档</span><span id="device-assistant-memory" class="device-assistant-memory">记忆状态将在选择对话后显示</span></div>
+          <div class="device-assistant-console-actions">
+            <button id="device-assistant-rename" class="device-assistant-action" type="button" disabled>重命名</button>
+            <button id="device-assistant-toggle-memory" class="device-assistant-action" type="button" disabled>关闭记忆</button>
+            <button id="device-assistant-clear-summary" class="device-assistant-action" type="button" disabled>清除摘要</button>
+            <button id="device-assistant-clear" class="device-assistant-action" type="button" disabled>清空消息</button>
+            <button id="device-assistant-delete" class="device-assistant-action danger" type="button" disabled>删除</button>
+          </div>
+        </header>
+        <div id="device-assistant-messages" class="device-assistant-messages"><p class="device-assistant-empty">从左侧选择一条记录，即可查看设备听到的内容和助手回复。</p></div>
+        <footer class="device-assistant-foot">设备录音采用“按住说话、松开提交”的方式。设备空闲超过 30 分钟后，服务器会自动开始新对话；网页端与设备端记忆始终隔离。</footer>
+      </section>
+    </section>
+  </main>
+  <script src="assets/js/device-assistant.js"></script>
+  <script src="assets/js/app.js?v=20260812-diagnostics"></script>
+</body>
+</html>

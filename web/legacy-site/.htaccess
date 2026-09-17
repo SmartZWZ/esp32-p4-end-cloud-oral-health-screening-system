@@ -1,0 +1,7 @@
+Options -Indexes
+DirectoryIndex index.html
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|json)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

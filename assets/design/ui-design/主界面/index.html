@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Home</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="screen" aria-label="DentiScope home screen">
+      <!-- Add class "is-offline" here when the device has no Wi-Fi connection. -->
+      <section class="time-card is-online" aria-label="Current time and network status">
+        <div class="time-summary">
+          <time class="time" datetime="2026-07-18T10:42">10:42 <span>AM</span></time>
+          <time class="date" datetime="2026-07-18">2026/7/18</time>
+        </div>
+        <div class="network-state" aria-label="Wi-Fi online">
+          <img src="assets/wifi.svg" alt="" />
+          <span class="online-label">ONLINE</span>
+        </div>
+      </section>
+
+      <button class="capture-button" type="button" aria-label="Start capture">
+        <img src="assets/shutter.svg" alt="" />
+        <span>START CAPTURE</span>
+      </button>
+
+      <section class="secondary-actions" aria-label="Device options">
+        <button class="action-card" type="button">
+          <img src="assets/device-binding.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">DEVICE BINDING</span>
+            <span class="action-description">CODE: DS-P4-8A72</span>
+          </span>
+        </button>
+
+        <a class="action-card" href="../成员管理界面/index.html">
+          <img src="assets/members.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">MEMBER MANAGEMENT</span>
+            <span class="action-description">Manage access and profiles</span>
+          </span>
+        </a>
+
+        <a class="action-card" href="../设置界面/index.html">
+          <img src="assets/settings.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">SETTINGS</span>
+            <span class="action-description">System and network preferences</span>
+          </span>
+        </a>
+      </section>
+
+      <footer class="brand">DentiScope</footer>
+    </main>
+  </body>
+</html>

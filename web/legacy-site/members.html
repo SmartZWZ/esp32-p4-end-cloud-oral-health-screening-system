@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN" data-page="members" data-protected="true">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>成员 — 齿镜</title>
+<link rel="icon" href="cj.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/refine.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<link rel="stylesheet" href="assets/css/polish.css">
+<link rel="stylesheet" href="assets/css/members.css?v=20260727-member-profile-2">
+</head>
+<body>
+<header class="site-header">
+<a class="wordmark" href="dashboard.html">
+<img src="cj.svg" alt="齿镜">
+<span class="brand-name">齿镜<small>DentiScope</small>
+</span>
+</a>
+<nav>
+<a href="dashboard.html">概览</a>
+<a href="devices.html">设备</a>
+<a class="active" href="members.html">成员</a>
+<a href="detections.html">影像</a>
+<a href="dental-model-demo.html">牙列模型</a>
+<a href="ai-dentist.html">AI牙医</a>
+<a href="assistant.html">助手</a>
+</nav>
+<button class="theme-toggle" type="button">切换主题</button>
+<button class="logout-button" type="button">退出</button>
+</header>
+<main class="app-main">
+<section class="page-head">
+<div>
+<p class="kicker">FAMILY MEMBERS</p>
+<h1>家庭成员</h1>
+</div>
+<button id="open-member-dialog" class="button button-fill">添加成员</button>
+</section>
+<section class="paper-block">
+<div class="block-head">
+<p>设备将同步此列表</p>
+<span id="member-total">—</span>
+</div>
+<div id="member-list" class="member-list">
+<p>正在读取成员…</p>
+</div>
+</section>
+<p class="medical-note">成员只能在网页端增删改。删除成员不会删除既有影像记录，但该成员将不再出现在设备选择列表中。</p>
+</main>
+<dialog id="member-dialog" class="modal">
+<form id="member-form">
+<p id="member-form-index" class="panel-index">成员 / 新增</p>
+<h2 id="member-dialog-title">添加家庭成员</h2>
+<input id="member-public-id" name="public_id" type="hidden">
+<label>姓名<input name="name" maxlength="64" required>
+</label>
+<label>关系<input name="relationship" placeholder="例如：本人、孩子、父亲" maxlength="32">
+</label>
+<label>性别<select name="gender">
+<option value="unknown">暂不填写</option>
+<option value="male">男</option>
+<option value="female">女</option>
+</select>
+</label>
+<label>出生日期<input name="birth_date" type="date">
+</label>
+<p id="member-message" class="form-message">
+</p>
+<div class="modal-actions">
+<button class="button button-plain close-member-dialog" type="button">取消</button>
+<button id="member-submit" class="button button-fill" type="submit">保存成员</button>
+</div>
+</form>
+</dialog>
+<script src="assets/js/app.js?v=20260812-diagnostics">
+</script>
+</body>
+</html>

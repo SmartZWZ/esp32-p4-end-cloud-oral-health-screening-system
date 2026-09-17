@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN" data-page="reference-library" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>采集参考图管理 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/visibility.css">
+  <link rel="stylesheet" href="assets/css/reference-library.css?v=20260812-reference-quality-v2">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a class="active" href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main reference-main">
+    <section class="page-head reference-page-head">
+      <div><a class="reference-back" href="ai-dentist-admin.html">← 返回管理设置</a><p class="kicker">CAPTURE REFERENCE LIBRARY</p><h1>采集参考图管理</h1></div>
+      <p>七个区域，每区三种距离。发布表示内容齐全；只有被启用的版本才会参与设备拍摄质量判断。</p>
+    </section>
+
+    <section class="reference-control-line" aria-label="参考图运行状态">
+      <div><span>当前使用版本</span><strong id="reference-active-version">未启用</strong></div>
+      <div><span>质量判断</span><strong id="reference-validation-state">已关闭</strong></div>
+      <div><span>图片方向</span><strong id="reference-orientation-state">保持设备方向</strong></div>
+      <label class="reference-switch"><input id="reference-validation-toggle" type="checkbox"><span>启用模型判断</span></label>
+    </section>
+    <p id="reference-message" class="reference-message" role="status"></p>
+
+    <section class="reference-workbench">
+      <aside class="reference-version-rail">
+        <div class="reference-section-head"><div><p class="panel-index">VERSION INDEX</p><h2>版本</h2></div><button id="reference-new-version" class="button button-fill" type="button">新建</button></div>
+        <div id="reference-version-list" class="reference-version-list"><p class="reference-empty">正在读取版本…</p></div>
+        <div class="reference-rail-note"><strong>状态彼此独立</strong><p>“已发布”只代表21张齐全；“正在使用”由单独的启用操作决定。</p></div>
+      </aside>
+
+      <section class="reference-canvas">
+        <div class="reference-version-head">
+          <div><p id="reference-version-code" class="panel-index">NO VERSION</p><h2 id="reference-version-name">先创建一个参考版本</h2><p id="reference-version-description">参考图片不会进入任何家庭成员的影像记录。</p></div>
+          <div id="reference-version-badges" class="reference-version-badges"></div>
+        </div>
+        <div id="reference-version-actions" class="reference-version-actions" hidden>
+          <button id="reference-copy-version" class="button button-plain" type="button">复制为新草稿</button>
+          <button id="reference-test-version" class="button button-plain" type="button">拍摄质量与延迟测试</button>
+          <button id="reference-publish-version" class="button button-fill" type="button">发布版本</button>
+          <button id="reference-activate-version" class="button button-fill" type="button">设为当前版本</button>
+          <button id="reference-deactivate-version" class="button button-plain" type="button">停止使用</button>
+          <button id="reference-archive-version" class="button button-plain" type="button">归档</button>
+          <button id="reference-restore-version" class="button button-plain" type="button">恢复为已发布</button>
+          <button id="reference-delete-version" class="button button-plain" type="button">删除草稿</button>
+        </div>
+        <div class="reference-progress"><div><span id="reference-progress-label">0 / 21 张</span><span id="reference-review-label">0 张已确认</span></div><i id="reference-progress-bar"></i></div>
+        <div id="reference-slot-groups" class="reference-slot-groups"><div class="reference-no-version">创建版本后，这里会出现21个固定槽位。</div></div>
+      </section>
+    </section>
+
+    <section class="reference-audit">
+      <div class="reference-section-head"><div><p class="panel-index">ADMIN AUDIT</p><h2>最近操作</h2></div><button id="reference-refresh-logs" class="text-button" type="button">刷新</button></div>
+      <div class="reference-table-wrap"><table><thead><tr><th>时间</th><th>操作</th><th>版本</th><th>槽位</th><th>管理员</th><th>来源IP</th></tr></thead><tbody id="reference-log-body"><tr><td colspan="6">正在读取日志…</td></tr></tbody></table></div>
+    </section>
+  </main>
+
+  <input id="reference-slot-file" type="file" accept="image/jpeg,.jpg,.jpeg" hidden>
+
+  <dialog id="reference-version-dialog" class="modal reference-small-dialog">
+    <form id="reference-version-form">
+      <p class="panel-index">NEW REFERENCE SET</p><h2>新建参考版本</h2>
+      <label>版本名称<input name="name" maxlength="96" placeholder="例如：OV5647 标准补光 · 第一版" required></label>
+      <label>说明<textarea name="description" maxlength="500" placeholder="记录拍摄环境、镜头与用途"></textarea></label>
+      <p id="reference-version-form-message" class="reference-dialog-message"></p>
+      <div class="modal-actions"><button class="button button-plain reference-dialog-close" type="button">取消</button><button class="button button-fill" type="submit">创建版本</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="reference-cloud-dialog" class="modal reference-cloud-dialog">
+    <section>
+      <div class="reference-dialog-head"><div><p class="panel-index">CLOUD IMAGE SOURCE</p><h2>从现有影像选择</h2></div><button class="text-button reference-cloud-close" type="button">关闭</button></div>
+      <div class="reference-cloud-search"><input id="reference-cloud-query" placeholder="搜索成员或影像编号"><button id="reference-cloud-search" class="button button-plain" type="button">搜索</button></div>
+      <p id="reference-cloud-target" class="reference-dialog-message"></p>
+      <div id="reference-cloud-grid" class="reference-cloud-grid"><p>正在读取影像…</p></div>
+    </section>
+  </dialog>
+
+  <dialog id="reference-editor-dialog" class="reference-editor-dialog">
+    <div class="reference-editor-shell">
+      <header><div><p class="panel-index">IMAGE WORKBENCH</p><h2 id="reference-editor-title">编辑参考图</h2></div><button id="reference-editor-close" class="text-button" type="button">关闭</button></header>
+      <div class="reference-editor-body">
+        <div class="reference-editor-stage"><canvas id="reference-editor-canvas"></canvas><p>在图片上拖动可框选裁剪区域；不框选则保存完整画面。</p></div>
+        <aside class="reference-editor-tools">
+          <div class="reference-tool-group"><span>旋转角度</span><output id="reference-rotation-value">0°</output><input id="reference-rotation" type="range" min="-180" max="180" step="0.1" value="0"><div><button id="reference-rotate-left" class="button button-plain" type="button">左转90°</button><button id="reference-auto-straighten" class="button button-plain" type="button">自动拉直</button><button id="reference-rotate-right" class="button button-plain" type="button">右转90°</button></div></div>
+          <div class="reference-tool-group reference-orientation-tools"><span>方向</span><p>不会自动改变左右；仅在确认方向错误时手动镜像。</p><button id="reference-flip-horizontal" class="button button-plain" type="button">左右镜像</button></div>
+          <div class="reference-tool-group"><span>裁剪</span><p id="reference-crop-label">尚未选择裁剪区域</p><button id="reference-clear-crop" class="button button-plain" type="button">清除裁剪框</button></div>
+          <label>备注<textarea id="reference-editor-note" maxlength="500" placeholder="选填：参考图特点"></textarea></label>
+          <label>实际拍摄距离<input id="reference-editor-distance" maxlength="80" placeholder="选填，例如约 25 mm"></label>
+          <label>光照说明<input id="reference-editor-lighting" maxlength="180" placeholder="选填，例如设备补光中档"></label>
+          <label class="reference-review-check"><input id="reference-editor-reviewed" type="checkbox"><span>我已确认区域、距离与左右方向</span></label>
+          <p id="reference-editor-message" class="reference-dialog-message"></p>
+          <div class="reference-editor-actions"><button id="reference-reset-image" class="button button-plain" type="button">恢复规范基准图</button><button id="reference-save-metadata" class="button button-plain" type="button">保存资料</button><button id="reference-save-image" class="button button-fill" type="button">保存图像编辑</button></div>
+        </aside>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="reference-test-dialog" class="reference-test-dialog">
+    <div class="reference-test-shell">
+      <header class="reference-test-head">
+        <div><p class="panel-index">CAPTURE QUALITY / REFERENCE BENCH</p><h2>拍摄质量与延迟测试</h2><p>三张同区域参考图作为距离标尺；左右侧测试还会自动加入反侧合适图，防止镜像和左右误判。</p></div>
+        <button class="text-button reference-test-close" type="button">关闭</button>
+      </header>
+
+      <div class="reference-test-body">
+        <aside class="reference-test-controls">
+          <form id="reference-test-form">
+            <div class="reference-test-step reference-quality-step"><span>00</span><div><strong>判定策略</strong><small>单独指定视觉模型与严格通过门槛</small></div></div>
+            <div class="reference-quality-fields">
+              <label>质量判断模型 ID<input id="reference-quality-model" type="text" maxlength="96" placeholder="留空则跟随 AI 牙医主模型"></label>
+              <label>最低通过置信度<input id="reference-quality-threshold" type="number" min="0.50" max="0.99" step="0.01" value="0.80"></label>
+              <button id="reference-save-quality-settings" class="button button-plain" type="button">保存判定设置</button>
+              <p id="reference-quality-settings-message" class="reference-dialog-message">通过还必须同时满足区域、距离、清晰度、光照和取景要求。</p>
+            </div>
+
+            <div class="reference-test-step"><span>01</span><div><strong>选择目标区域</strong><small>自动读取该区域的三张参考图</small></div></div>
+            <label>期望区域<select id="reference-test-region" name="expected_region" required></select></label>
+            <p id="reference-test-readiness" class="reference-test-readiness">正在检查参考图…</p>
+
+            <div class="reference-test-step"><span>02</span><div><strong>提供测试图片</strong><small>云端影像与本地 JPEG 二选一</small></div></div>
+            <label>从云端现有影像选择<select id="reference-test-cloud" name="candidate_detection_id"><option value="">不选择云端影像</option></select></label>
+            <div class="reference-test-or"><span>或者</span></div>
+            <label class="reference-test-file-label">上传测试 JPEG<input id="reference-test-file" name="candidate_file" type="file" accept="image/jpeg,.jpg,.jpeg"><span>选择一张照片</span></label>
+            <p class="reference-dialog-message">测试图片保持当前文件方向，不额外镜像翻转。</p>
+
+            <button id="reference-run-test" class="button button-fill" type="submit">发送四张图片并开始计时</button>
+          </form>
+        </aside>
+
+        <section class="reference-test-stage">
+          <div id="reference-test-image-grid" class="reference-test-image-grid">
+            <figure data-test-distance="too_far"><div><span>等待参考图</span></div><figcaption><b>01</b><span>太远参考</span></figcaption></figure>
+            <figure data-test-distance="too_close"><div><span>等待参考图</span></div><figcaption><b>02</b><span>太近参考</span></figcaption></figure>
+            <figure data-test-distance="good"><div><span>等待参考图</span></div><figcaption><b>03</b><span>合适参考</span></figcaption></figure>
+            <figure class="is-candidate" data-test-distance="candidate"><div id="reference-test-candidate-preview"><span>选择测试图片</span></div><figcaption><b>04</b><span>本次候选图</span></figcaption></figure>
+          </div>
+
+          <div id="reference-test-status" class="reference-test-status" data-state="idle">
+            <div class="reference-test-verdict"><span id="reference-test-verdict-label">等待测试</span><strong id="reference-test-verdict">尚未运行</strong><p id="reference-test-advice">选择区域和候选图后开始测试。</p></div>
+            <div class="reference-test-facts" id="reference-test-facts">
+              <div><span>距离</span><strong>—</strong></div><div><span>区域</span><strong>—</strong></div><div><span>清晰度</span><strong>—</strong></div><div><span>光照</span><strong>—</strong></div><div><span>取景</span><strong>—</strong></div><div><span>置信度</span><strong>—</strong></div>
+            </div>
+            <div class="reference-test-timing" id="reference-test-timing">
+              <div><span>图片准备</span><strong>—</strong></div><i></i><div><span>模型响应</span><strong>—</strong></div><i></i><div><span>结果入库</span><strong>—</strong></div><i></i><div><span>服务端总计</span><strong>—</strong></div><i></i><div class="is-total"><span>端到端往返</span><strong>—</strong></div>
+            </div>
+            <p id="reference-test-summary" class="reference-test-summary"></p>
+          </div>
+        </section>
+      </div>
+
+      <section class="reference-test-history">
+        <div class="reference-section-head"><div><p class="panel-index">RECENT BENCHMARKS</p><h2>最近测试</h2></div><button id="reference-refresh-tests" class="text-button" type="button">刷新</button></div>
+        <div class="reference-calibration" aria-label="人工校准统计">
+          <div><span>已人工复核</span><strong id="reference-calibration-labeled">0</strong></div>
+          <div><span>通过 / 重拍一致率</span><strong id="reference-calibration-agreement">—</strong></div>
+          <div><span>距离判断准确率</span><strong id="reference-calibration-distance">—</strong></div>
+        </div>
+        <p class="reference-calibration-note">准确率只统计已人工复核样本。建议每个区域分别积累“太远、太近、合适”样本后再调整门槛或更换模型。</p>
+        <div class="reference-table-wrap"><table><thead><tr><th>时间</th><th>区域</th><th>模型结论</th><th>建议</th><th>模型耗时</th><th>服务端</th><th>端到端</th><th>模型</th><th>人工结论</th><th>人工复核</th></tr></thead><tbody id="reference-test-history-body"><tr><td colspan="10">尚未读取测试记录。</td></tr></tbody></table></div>
+      </section>
+    </div>
+  </dialog>
+
+  <script src="assets/js/reference-library.js?v=20260812-reference-quality-v3"></script>
+  <script src="assets/js/app.js?v=20260812-diagnostics"></script>
+</body>
+</html>

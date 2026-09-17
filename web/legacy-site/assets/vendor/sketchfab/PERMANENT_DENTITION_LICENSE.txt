@@ -1,0 +1,11 @@
+Permanent Dentition
+===================
+
+Creator: University of Dundee, School of Dentistry
+Source: https://sketchfab.com/3d-models/permanent-dentition-2f69d7b59c3e4a6a8bcae041bd8e591b
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+The model is streamed by the Sketchfab Viewer API. This website does not claim
+ownership of the model. The surrounding interface, FDI mapping and tooth-record
+workflow are part of the Chijing prototype.

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN" data-page="dental-model-demo" data-protected="true">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>七视图牙列模型 Demo — 齿镜</title>
+<link rel="icon" href="cj.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/refine.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<link rel="stylesheet" href="assets/css/polish.css">
+<link rel="stylesheet" href="assets/css/dental-model-demo.css?v=20260823-numbered-datasets-v1">
+</head>
+<body>
+<header class="site-header">
+<a class="wordmark" href="dashboard.html">
+<img src="cj.svg" alt="齿镜">
+<span class="brand-name">齿镜<small>DentiScope</small></span>
+</a>
+<nav>
+<a href="dashboard.html">概览</a>
+<a href="devices.html">设备</a>
+<a href="members.html">成员</a>
+<a href="detections.html">影像</a>
+<a class="active" href="dental-model-demo.html">牙列模型</a>
+<a href="ai-dentist.html">AI牙医</a>
+<a href="assistant.html">助手</a>
+</nav>
+<button class="theme-toggle" type="button">切换主题</button>
+<button class="logout-button" type="button">退出</button>
+</header>
+
+<main class="app-main dental-model-main">
+<section class="model-demo-head">
+<div>
+<p class="kicker">SEVEN-VIEW RECONSTRUCTION · PROTOTYPE 01</p>
+<h1>把七个视角，整理成一副可探索的牙列。</h1>
+</div>
+<p>先验证全口采集的输入、轮廓提取和查看流程。真实照片会用逐牙轮廓约束参数牙列，但它仍不是医学级三维扫描。</p>
+</section>
+
+<section class="prototype-note" aria-label="原型说明">
+<span>原型边界</span>
+<p>演示输入只在浏览器中生成；选择真实照片后，会归档到所选成员并交给本地 RTX 工作端提取逐牙轮廓与浅龋暗线。</p>
+</section>
+
+<section class="model-studio" aria-label="七视图牙列模型工作台">
+<aside class="capture-rail">
+<div class="rail-head">
+<div>
+<p class="panel-index">01 / INPUT VIEWS</p>
+<h2>七视图输入</h2>
+</div>
+<strong id="view-ready-count">0 / 7</strong>
+</div>
+
+<div class="view-progress" aria-hidden="true"><i id="view-progress-bar"></i></div>
+
+<label class="model-member-field">
+<span>照片所属成员</span>
+<select id="model-demo-member"><option value="">正在读取成员…</option></select>
+</label>
+<div id="capture-import-card" class="capture-import-card" hidden>
+<span>七图档案袋</span><strong id="capture-import-title">正在读取档案袋…</strong><p id="capture-import-meta">七张照片会按固定视角一次导入。</p>
+</div>
+
+<div id="view-slot-list" class="view-slot-list">
+<button class="view-slot" type="button" data-view="front_bite" data-index="01">
+<span class="slot-number">01</span><span class="slot-copy"><b>正面咬合</b><small>FRONT BITE</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="left_bite" data-index="02">
+<span class="slot-number">02</span><span class="slot-copy"><b>左侧咬合</b><small>LEFT BITE</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="right_bite" data-index="03">
+<span class="slot-number">03</span><span class="slot-copy"><b>右侧咬合</b><small>RIGHT BITE</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="upper_left_open" data-index="04">
+<span class="slot-number">04</span><span class="slot-copy"><b>左上牙列</b><small>UPPER LEFT</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="upper_right_open" data-index="05">
+<span class="slot-number">05</span><span class="slot-copy"><b>右上牙列</b><small>UPPER RIGHT</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="lower_left_open" data-index="06">
+<span class="slot-number">06</span><span class="slot-copy"><b>左下牙列</b><small>LOWER LEFT</small></span><span class="slot-state">选择</span>
+</button>
+<button class="view-slot" type="button" data-view="lower_right_open" data-index="07">
+<span class="slot-number">07</span><span class="slot-copy"><b>右下牙列</b><small>LOWER RIGHT</small></span><span class="slot-state">选择</span>
+</button>
+</div>
+
+<input id="view-file-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+
+<div class="rail-actions">
+<label class="numbered-dataset-field" for="numbered-test-dataset">
+<span>编号测试数据</span>
+<select id="numbered-test-dataset">
+<option value="seven-view-numbered-wx-v1" selected>WX 标定 V1 · 当前默认</option>
+<option value="seven-view-numbered-v1">编号测试 01 · 旧版</option>
+</select>
+<small id="numbered-test-meta">2026.08.23 标定 · 73 组单牙视角</small>
+</label>
+<button id="load-numbered-test" class="button button-plain button-test-data" type="button">载入编号测试数据</button>
+<button id="load-demo-views" class="button button-plain" type="button">载入演示输入</button>
+<button id="build-demo-model" class="button button-fill" type="button" disabled>提取轮廓并生成</button>
+</div>
+<p id="input-status" class="rail-status" aria-live="polite">请选择七个固定视角，或载入演示输入。</p>
+<div id="dental-arch-task" class="dental-arch-task" hidden><span id="dental-arch-task-state">处理任务</span><strong id="dental-arch-task-progress">0 / 10</strong><div><i id="dental-arch-task-bar"></i></div><p id="dental-arch-task-label">正在准备…</p><button id="dental-arch-task-action" class="text-button" type="button" hidden>继续处理</button></div>
+</aside>
+
+<div class="model-workspace">
+<div class="viewer-toolbar">
+<div class="model-view-modes" role="group" aria-label="模型数据来源">
+<button class="active" type="button" data-render-mode="anatomical">完整恒牙列</button>
+<button type="button" data-render-mode="measured" disabled>实测牙面</button>
+<button type="button" data-render-mode="parametric">参数牙列</button>
+</div>
+<div class="segmented-control" role="group" aria-label="牙列显示范围">
+<button class="active" type="button" data-arch="both">全牙列</button>
+<button type="button" data-arch="upper">上颌</button>
+<button type="button" data-arch="lower">下颌</button>
+</div>
+<div class="viewer-actions">
+<button id="toggle-wireframe" type="button">轮廓</button>
+<button id="reset-model-view" type="button">复位</button>
+<button id="download-model-view" type="button" disabled>导出视图</button>
+</div>
+</div>
+
+<div id="model-stage" class="model-stage model-ready" data-model-layer="anatomical" tabindex="0" aria-label="可交互恒牙列模型。拖动旋转，滚轮缩放，点击牙齿进入单牙档案。">
+<div id="anatomical-model-layer" class="anatomical-model-layer">
+<div id="local-dentition-viewport" class="local-dentition-viewport" role="img" aria-label="服务器本地加载的32颗恒牙交互模型"></div>
+<div id="tooth-hover-label" class="tooth-hover-label" hidden><strong>FDI —</strong><span>点击进入单牙档案</span></div>
+<div id="dentition-loading" class="dentition-loading">
+<span class="dentition-loader" aria-hidden="true"></span>
+<strong>正在载入 32 颗恒牙模型</strong>
+<small>模型由齿镜服务器直接提供，无需访问外部三维网站</small>
+</div>
+<div class="dentition-instruction"><span>拖动旋转</span><span>滚轮缩放</span><span>点击单牙进入档案</span></div>
+</div>
+<canvas id="dental-model-canvas"></canvas>
+<div id="model-empty-state" class="model-empty-state">
+<span class="empty-orbit" aria-hidden="true"><i></i><i></i><i></i></span>
+<p class="panel-index">MODEL WAITING</p>
+<h2>七个视角就绪后，从这里开始重建。</h2>
+<p>拖动旋转 · 滚轮或双指缩放 · 点击单牙查看编号</p>
+</div>
+<div id="model-build-overlay" class="model-build-overlay" hidden>
+<span id="build-percent">0%</span>
+<div><i id="build-progress-bar"></i></div>
+<p id="build-step">正在校验输入视角</p>
+</div>
+<div class="stage-caption">
+<span id="model-state-dot"></span>
+<p id="model-state-label">完整恒牙列已就绪</p>
+<small id="model-render-mode-label">32-TOOTH ANATOMICAL DENTITION · LOCAL GLTF</small>
+</div>
+</div>
+
+<section class="fdi-index-panel" aria-labelledby="fdi-index-title">
+<header><div><p class="panel-index">FDI TOOTH INDEX</p><h2 id="fdi-index-title">选择一颗牙，进入它的独立档案</h2></div><span>患者视角 · 32 颗恒牙</span></header>
+<div id="fdi-tooth-index" class="fdi-tooth-index"></div>
+</section>
+
+<div class="view-preset-strip" aria-label="模型观察角度">
+<button class="active" type="button" data-preset="front_bite"><span>01</span>正面</button>
+<button type="button" data-preset="left_bite"><span>02</span>左侧</button>
+<button type="button" data-preset="right_bite"><span>03</span>右侧</button>
+<button type="button" data-preset="upper_left_open"><span>04</span>左上</button>
+<button type="button" data-preset="upper_right_open"><span>05</span>右上</button>
+<button type="button" data-preset="lower_left_open"><span>06</span>左下</button>
+<button type="button" data-preset="lower_right_open"><span>07</span>右下</button>
+</div>
+
+<div class="model-inspector">
+<section>
+<p class="panel-index">02 / SELECTED TOOTH</p>
+<div class="inspector-reading">
+<strong id="selected-tooth-number">—</strong>
+<div><h3 id="selected-tooth-name">尚未选择单牙</h3><p id="selected-tooth-meta">生成后点击牙面，可查看模型实例编号和来源视角。</p></div>
+</div>
+</section>
+<section>
+<p class="panel-index">03 / PIPELINE</p>
+<ol id="pipeline-log" class="pipeline-log">
+<li class="active"><i></i>七视图输入</li>
+<li><i></i>视角与质量校验</li>
+<li><i></i>牙列先验拟合</li>
+<li><i></i>交互模型生成</li>
+</ol>
+</section>
+</div>
+</div>
+</section>
+
+<section class="model-method-note">
+<p class="panel-index">WHAT THIS DEMO PROVES</p>
+<div>
+<h2>固定解剖牙列负责导航，患者照片负责记录。</h2>
+<p>这不是用七张照片伪造三维扫描。完整恒牙列作为 32 个可点击入口；真实照片经轮廓识别和牙位匹配后，绑定到对应 FDI 牙位，在单牙档案中按视角和时间保存。</p>
+</div>
+<dl>
+<div><dt>输入</dt><dd>7 个固定口内视角</dd></div>
+<div><dt>当前输出</dt><dd>32 牙位导航 + 单牙档案</dd></div>
+<div><dt>下一阶段</dt><dd>跨视图牙位匹配与纵向对比</dd></div>
+</dl>
+</section>
+
+<p class="model-attribution">解剖模型来源：University of Dundee, School of Dentistry，<a href="https://sketchfab.com/3d-models/permanent-dentition-2f69d7b59c3e4a6a8bcae041bd8e591b" target="_blank" rel="noopener">Permanent Dentition</a>，依据 CC BY 4.0 使用。模型仅作牙位导航。</p>
+<p class="medical-note">本页面是交互和技术路线演示，不提供口腔诊断。固定模型不代表成员真实牙齿形态；单牙照片与牙位匹配结果需要专业人员复核。</p>
+</main>
+
+<dialog id="dental-arch-mode-dialog" class="dental-arch-mode-dialog">
+<form method="dialog"><p class="panel-index">BEFORE GENERATION</p><h2>生成后是否先检查牙号？</h2><p>本地轮廓模型会先找出候选轮廓，视觉大模型再完善轮廓、判断 FDI 牙号，并对七张图做统一复核。</p><div><button class="mode-choice recommended" type="button" data-review-choice="review"><span>建议</span><strong>先进入确认页面</strong><small>可以改牙号、移动轮廓点、添加或删除轮廓，再绑定到牙列。</small></button><button class="mode-choice" type="button" data-review-choice="direct"><span>快捷</span><strong>直接生成</strong><small>跳过人工确认，模型结果会直接成为当前牙列版本。</small></button></div><button class="text-button" value="cancel">暂不生成</button></form>
+</dialog>
+
+<script src="assets/js/dental-model-demo.js?v=20260823-numbered-datasets-v1"></script>
+<script src="assets/js/app.js?v=20260814-dental-arch-v1"></script>
+</body>
+</html>

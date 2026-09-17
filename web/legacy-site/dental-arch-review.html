@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN" data-page="dental-arch-review" data-protected="true">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff">
+<title>牙列标注确认 — 齿镜</title><link rel="icon" href="cj.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/refine.css"><link rel="stylesheet" href="assets/css/responsive.css"><link rel="stylesheet" href="assets/css/polish.css">
+<link rel="stylesheet" href="assets/css/dental-arch-review.css?v=20260814-v1">
+</head>
+<body>
+<header class="site-header"><a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a><nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a class="active" href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav><button class="theme-toggle" type="button">切换主题</button><button class="logout-button" type="button">退出</button></header>
+<main class="app-main arch-review-main">
+  <section class="arch-review-head"><div><p class="kicker">HUMAN-IN-THE-LOOP REVIEW</p><h1>确认轮廓，也确认每一颗牙的身份。</h1><p id="arch-review-meta">正在读取牙列版本…</p></div><div class="arch-review-head-actions"><a id="review-back" class="button button-plain" href="dental-model-demo.html">返回牙列模型</a><button id="review-save" class="button button-plain" type="button">保存修改</button><button id="review-confirm" class="button button-fill" type="button">确认并绑定牙列</button></div></section>
+  <p id="arch-review-message" class="arch-review-message" role="status" aria-live="polite"></p>
+  <section class="arch-review-status"><div><span>七视图</span><strong id="review-view-count">—</strong></div><div><span>牙位</span><strong id="review-tooth-count">—</strong></div><div><span>冲突</span><strong id="review-conflict-count">—</strong></div><p>蓝色为高可信轮廓，橙色表示需要复核。红色只代表研究候选或冲突，不代表疾病诊断。</p></section>
+  <section class="arch-review-workbench">
+    <aside><header><p class="panel-index">01 / VIEWS</p><h2>逐图复核</h2></header><div id="review-view-list" class="review-view-list"></div></aside>
+    <div class="review-canvas-panel">
+      <header><div><p class="panel-index">02 / CONTOUR EDITOR</p><h2 id="review-view-title">选择一个视角</h2></div><span id="review-view-note">拖动轮廓点可微调</span></header>
+      <div id="review-canvas-stage" class="review-canvas-stage"><canvas id="review-canvas"></canvas><div class="review-canvas-empty">正在准备原图与轮廓…</div></div>
+      <div class="review-canvas-tools"><button id="review-add" type="button">添加轮廓</button><button id="review-delete" type="button" disabled>删除轮廓</button><button id="review-reset-view" type="button">重置本图</button><button id="review-download-view" type="button">下载标注图</button><span>添加轮廓：依次点击边界点，双击结束</span></div>
+    </div>
+    <aside class="review-inspector"><header><p class="panel-index">03 / TOOTH ID</p><h2>牙号与冲突</h2></header><section id="review-selection-empty"><p>点击图中的牙齿轮廓，查看或修改 FDI 编号。</p></section><section id="review-selection" hidden><label>FDI 牙号<select id="review-fdi"></select></label><label>可信度<input id="review-confidence" type="number" min="0" max="1" step="0.01"></label><p id="review-selection-meta"></p></section><div id="review-conflicts" class="review-conflicts"></div></aside>
+  </section>
+  <section class="review-export"><div><p class="panel-index">EXPORT</p><h2>保留可复核的中间结果</h2><p>可下载结构化 JSON、当前标注图或七张标注图 ZIP。</p></div><div><button id="review-download-json" class="button button-plain" type="button">下载 JSON</button><button id="review-download-zip" class="button button-plain" type="button">下载七图 ZIP</button></div></section>
+</main>
+<script src="assets/vendor/jszip/jszip.min.js"></script><script src="assets/js/dental-arch-review.js?v=20260814-v1"></script><script src="assets/js/app.js?v=20260814-dental-arch-v1"></script>
+</body></html>

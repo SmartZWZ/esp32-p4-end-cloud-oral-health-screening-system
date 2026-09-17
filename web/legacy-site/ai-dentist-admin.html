@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN" data-page="ai-dentist-admin" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>AI牙医管理 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/visibility.css">
+  <link rel="stylesheet" href="assets/css/ai-dentist-admin.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a class="active" href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+  <main class="app-main dentist-admin-main">
+    <section class="page-head dentist-admin-head">
+      <div><a href="ai-dentist.html" class="dentist-admin-back">← 返回AI牙医</a><p class="kicker">AI DENTIST CONTROL ROOM</p><h1>AI牙医管理</h1></div>
+      <p>模型策略、医疗边界、账户额度和调用审计集中在这里。API Key 只保存在服务器环境文件中。</p>
+    </section>
+
+    <section class="dentist-admin-reference-entry">
+      <div><p class="panel-index">CAPTURE REFERENCE LIBRARY</p><h2>七视图采集参考图</h2><p>管理七个口腔区域的21张距离对照照片、发布版本和当前启用状态。</p></div>
+      <a class="button button-fill" href="reference-library.html">进入参考图管理</a>
+    </section>
+
+    <section id="dentist-admin-runtime" class="dentist-admin-runtime">
+      <div><span>API Key</span><strong>检查中</strong></div>
+      <div><span>兼容接口</span><strong>检查中</strong></div>
+      <div><span>图片签名域名</span><strong>检查中</strong></div>
+      <button id="dentist-admin-test" class="button button-plain" type="button">测试模型连接</button>
+    </section>
+    <p id="dentist-admin-message" class="dentist-admin-message" role="status"></p>
+
+    <section class="dentist-admin-stats">
+      <article><span>累计调用</span><strong id="admin-total-calls">—</strong></article>
+      <article><span>今日调用</span><strong id="admin-today-calls">—</strong></article>
+      <article><span>成功率</span><strong id="admin-success-rate">—</strong></article>
+      <article><span>平均响应</span><strong id="admin-average-latency">—</strong></article>
+      <article><span>累计Token</span><strong id="admin-total-tokens">—</strong></article>
+    </section>
+
+    <section class="dentist-admin-grid">
+      <form id="dentist-admin-settings" class="dentist-admin-settings">
+        <div class="dentist-admin-section-head"><div><p class="panel-index">MODEL POLICY</p><h2>模型与运行策略</h2></div><label class="admin-switch"><input id="admin-enabled" type="checkbox"><span>启用AI牙医</span></label></div>
+        <div class="dentist-admin-fields two">
+          <label>主模型 ID<input id="admin-primary-model" maxlength="96" required></label>
+          <label>备用模型 ID<input id="admin-fallback-model" maxlength="96"></label>
+          <label>牙列视觉复核模型<input id="admin-dental-arch-model" maxlength="96" required><small>默认 qwen3.7-plus；用于逐图和七图统一牙号复核</small></label>
+          <label>牙列备用视觉模型<input id="admin-dental-arch-fallback-model" maxlength="96"><small>主模型失败时自动切换</small></label>
+          <label>请求超时（秒）<input id="admin-timeout" type="number" min="15" max="180" required></label>
+          <label>模型温度<input id="admin-temperature" type="number" min="0" max="1" step="0.05" required></label>
+          <label>单次最多图片<input id="admin-max-images" type="number" min="1" max="10" required></label>
+          <label>参考历史条数<input id="admin-max-history" type="number" min="0" max="20" required></label>
+          <label>单用户每日额度<input id="admin-daily-limit" type="number" min="0" max="500" required><small>填写 0 表示不限制</small></label>
+          <label class="admin-checkbox"><input id="admin-history-default" type="checkbox"><span>默认参考成员历史</span></label>
+          <label class="admin-checkbox"><input id="admin-local-results-default" type="checkbox"><span>默认参考本地模型结果</span></label>
+          <label class="admin-checkbox"><input id="admin-high-resolution" type="checkbox"><span>启用口腔照片高分辨率理解</span></label>
+        </div>
+        <div class="dentist-admin-prompt">
+          <div><label for="admin-system-prompt">医疗边界与系统提示词</label><span id="admin-prompt-count">0 字</span></div>
+          <textarea id="admin-system-prompt" minlength="80" maxlength="10000" required></textarea>
+          <p>提示词应要求模型只描述可见表现、主动说明不确定性，并禁止把辅助筛查写成确定诊断。</p>
+        </div>
+        <button class="button button-fill" type="submit">保存全部配置</button>
+      </form>
+
+      <aside class="dentist-admin-models">
+        <div class="dentist-admin-section-head"><div><p class="panel-index">MODEL TRAFFIC</p><h2>模型调用分布</h2></div></div>
+        <div id="dentist-admin-model-list"><p>正在读取…</p></div>
+        <div class="dentist-admin-note"><strong>密钥隔离</strong><p>管理页面不会返回 API Key、网关密钥或图片签名密钥。更换密钥必须在服务器环境文件中完成。</p></div>
+      </aside>
+    </section>
+
+    <section class="dentist-admin-logs">
+      <div class="dentist-admin-section-head">
+        <div><p class="panel-index">CALL AUDIT</p><h2>调用日志</h2></div>
+        <form id="dentist-admin-filter">
+          <select id="admin-filter-success"><option value="">全部状态</option><option value="1">成功</option><option value="0">失败</option></select>
+          <select id="admin-filter-operation"><option value="">全部操作</option><option value="analysis">影像分析</option><option value="follow_up">报告追问</option><option value="dental_arch_image">牙列逐图复核</option><option value="dental_arch_joint">牙列七图统检</option><option value="admin_test">连接测试</option></select>
+          <input id="admin-filter-model" placeholder="模型 ID">
+          <button class="button button-plain" type="submit">筛选</button>
+        </form>
+      </div>
+      <div class="dentist-admin-table-wrap">
+        <table>
+          <thead><tr><th>时间</th><th>操作</th><th>模型</th><th>账户</th><th>状态</th><th>Token</th><th>耗时</th><th>请求ID / 错误</th></tr></thead>
+          <tbody id="dentist-admin-log-body"><tr><td colspan="8">正在读取日志…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="dentist-admin-pagination"><button id="admin-page-prev" class="text-button" type="button">上一页</button><span id="admin-page-label">1 / 1</span><button id="admin-page-next" class="text-button" type="button">下一页</button></div>
+    </section>
+  </main>
+  <script src="assets/js/ai-dentist-admin.js?v=20260814-dental-arch-v1"></script>
+  <script src="assets/js/app.js?v=20260814-dental-arch-v1"></script>
+</body>
+</html>

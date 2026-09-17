@@ -1,0 +1,156 @@
+/* AI牙医：影像库、报告工作台与历史管理 */
+.dentist-shell:not(.is-report-active){display:block;border-top:1px solid var(--ink)}
+.dentist-shell:not(.is-report-active) .dentist-intake{width:min(700px,100%);margin:0 auto;padding:30px 0 48px;border-right:0}
+.dentist-shell.is-report-active{grid-template-columns:minmax(260px,300px) minmax(0,1fr);gap:22px;border-top:0;align-items:start}
+.dentist-shell.is-report-active .dentist-intake{position:sticky;top:86px;max-height:calc(100vh - 108px);overflow:auto;padding:24px;background:var(--wash);border:1px solid var(--rule)}
+.dentist-intake-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.dentist-intake-head h2{margin-top:7px}
+.dentist-mobile-switch{display:none}
+
+.dentist-selected-images{display:grid;gap:7px}
+.dentist-selected-images>p{margin:0;padding:18px;border:1px dashed var(--rule);color:var(--muted);font-size:11px;font-weight:400;line-height:1.6}
+.dentist-selected-item{display:grid;grid-template-columns:52px 1fr 26px;align-items:center;gap:10px;min-width:0;padding:6px;border:1px solid var(--rule);background:var(--paper)}
+.dentist-selected-preview{position:relative;width:52px;height:52px;padding:0;border:0;background:#080808;overflow:hidden}
+.dentist-selected-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.dentist-selected-preview span{position:absolute;left:4px;top:4px;display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#fff;color:#111;font:9px ui-monospace,monospace}
+.dentist-selected-item>div{display:grid;gap:3px;min-width:0}
+.dentist-selected-item strong{font-size:11px}
+.dentist-selected-item small{color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dentist-selected-remove{width:26px;height:26px;padding:0;border:0;background:none;color:var(--muted);font-size:18px}
+.dentist-selected-remove:hover{color:var(--ink)}
+.dentist-gallery-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:60px;margin-top:8px;padding:12px 14px;border:1px solid var(--ink);background:var(--ink);color:var(--inverse);text-align:left}
+.dentist-gallery-trigger span{display:grid;gap:2px}
+.dentist-gallery-trigger strong{font-size:12px}
+.dentist-gallery-trigger small{font-size:9px;opacity:.65;font-weight:400}
+.dentist-gallery-trigger i{font-style:normal;font-size:18px;transition:transform .2s}
+.dentist-gallery-trigger:hover i{transform:translate(2px,-2px)}
+.dentist-gallery-trigger:disabled{border-color:var(--rule);background:var(--wash);color:var(--muted);cursor:not-allowed}
+
+.dentist-session-filters{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.dentist-session-filters input{grid-column:1/-1}
+.dentist-session-filters input,.dentist-session-filters select{min-width:0;height:34px;padding:0 8px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);font-size:10px;outline:0}
+.dentist-session-filters input:focus,.dentist-session-filters select:focus{border-color:var(--ink)}
+.dentist-session{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 28px;border-bottom:1px solid var(--rule)}
+.dentist-session.is-active{box-shadow:inset 2px 0 0 var(--ink)}
+.dentist-session-open{display:grid;gap:5px;min-width:0;padding:12px 7px;border:0;background:none;color:var(--ink);text-align:left}
+.dentist-session-open>span{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
+.dentist-session-open strong{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .18s}
+.dentist-session-open i{flex:0 0 auto;font:8px ui-monospace,monospace;color:var(--muted);font-style:normal}
+.dentist-session-open small{color:var(--muted);font-size:9px}
+.dentist-session-open p{margin:0;color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dentist-session-open:hover strong{transform:translateX(3px)}
+.dentist-session-menu{position:relative;align-self:start;margin-top:7px}
+.dentist-session-menu summary{display:grid;place-items:center;width:28px;height:28px;color:var(--muted);cursor:pointer;list-style:none;font:12px ui-monospace,monospace}
+.dentist-session-menu summary::-webkit-details-marker{display:none}
+.dentist-session-menu>div{position:absolute;right:0;top:30px;z-index:6;width:104px;padding:5px;background:var(--paper);border:1px solid var(--rule);box-shadow:0 12px 30px #0002}
+.dentist-session-menu button{width:100%;padding:8px;border:0;background:none;color:#b33434;font-size:10px;text-align:left}
+.dentist-session-menu button:hover{background:var(--wash)}
+
+.dentist-report{min-width:0;padding:0}
+.dentist-report-frame{background:var(--ink);padding:12px;box-shadow:0 22px 60px #0002}
+.dentist-report-paper{min-height:720px;padding:28px 32px 38px;background:var(--paper);color:var(--ink)}
+.dentist-report-head{padding-bottom:20px}
+.dentist-report-actions{flex-wrap:wrap;justify-content:flex-end}
+.text-button.is-danger{color:#b33434}
+.dentist-family-report-entry{display:flex;align-items:center;justify-content:space-between;gap:28px;margin:0 0 28px;padding:22px 24px;border:1px solid var(--ink);background:var(--ink);color:var(--inverse);transition:transform .18s,box-shadow .18s}
+.dentist-family-report-entry:hover{transform:translateY(-2px);box-shadow:0 18px 48px #0002}
+.dentist-family-report-entry .panel-index{color:currentColor;opacity:.55}
+.dentist-family-report-entry h2{margin:7px 0 6px;font-size:23px;font-weight:560;letter-spacing:-.045em}
+.dentist-family-report-entry p:last-child{max-width:680px;margin:0;color:currentColor;opacity:.68;font-size:12px;line-height:1.65}
+.dentist-family-report-entry>span{display:flex;align-items:center;gap:18px;white-space:nowrap;font-size:12px;font-weight:650}
+.dentist-family-report-entry>span i{font-style:normal;font-size:20px;font-weight:400}
+.dentist-working{min-height:590px}
+
+.dentist-modal[hidden],.dentist-preview[hidden]{display:none}
+.dentist-modal,.dentist-preview{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px}
+.dentist-modal-backdrop{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:#050505c9;backdrop-filter:blur(8px)}
+.dentist-modal-open{overflow:hidden}
+.dentist-gallery-dialog{position:relative;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;width:min(1180px,96vw);height:min(850px,92vh);background:var(--paper);color:var(--ink);box-shadow:0 30px 100px #0008}
+.dentist-gallery-head{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 28px 18px;border-bottom:1px solid var(--rule)}
+.dentist-gallery-head h2{margin:5px 0;font-size:28px;letter-spacing:-.05em}
+.dentist-gallery-head>div>p:last-child{margin:0;color:var(--muted);font-size:11px}
+.dentist-modal-close{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--rule);background:var(--paper);color:var(--ink);font-size:23px;font-weight:300}
+.dentist-gallery-filters{display:flex;align-items:center;gap:8px;padding:13px 28px;border-bottom:1px solid var(--rule);background:var(--wash)}
+.dentist-gallery-filters select{height:35px;min-width:150px;padding:0 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);font-size:10px}
+.dentist-gallery-filters .text-button{margin-left:auto}
+.dentist-gallery-scroll{min-height:0;overflow:auto;padding:22px 28px}
+.dentist-gallery-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.dentist-gallery-card{position:relative;min-width:0;border:1px solid var(--rule);background:var(--paper);transition:transform .18s,border-color .18s,box-shadow .18s}
+.dentist-gallery-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0002}
+.dentist-gallery-card.is-selected{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.dentist-gallery-select{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;background:#090909;overflow:hidden}
+.dentist-gallery-select img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.dentist-gallery-card:hover .dentist-gallery-select img{transform:scale(1.025)}
+.dentist-gallery-number{position:absolute;left:10px;top:10px;z-index:2;display:grid;place-items:center;width:25px;height:25px;border:1px solid #fff8;border-radius:50%;background:#1119;color:#fff;font:10px ui-monospace,monospace;backdrop-filter:blur(5px)}
+.dentist-gallery-card:not(.is-selected) .dentist-gallery-number:before{content:"";width:7px;height:7px;border-radius:50%;background:#fff8}
+.dentist-gallery-zoom{position:absolute;right:10px;top:10px;z-index:3;display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid #fff7;border-radius:50%;background:#1118;color:#fff;font-size:17px;backdrop-filter:blur(6px)}
+.dentist-gallery-card-meta{display:grid;gap:5px;padding:10px 11px 12px}
+.dentist-gallery-card-meta>div{display:flex;justify-content:space-between;gap:8px}
+.dentist-gallery-card-meta strong{font-size:11px}
+.dentist-gallery-card-meta span{color:var(--muted);font-size:9px}
+.dentist-gallery-card-meta small{color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dentist-gallery-state{padding:23px 0 8px;color:var(--muted);font-size:10px;text-align:center}
+#dentist-gallery-sentinel{height:1px}
+.dentist-gallery-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 28px;border-top:1px solid var(--rule);background:var(--paper)}
+.dentist-gallery-footer>div:first-child{display:grid;gap:2px}
+.dentist-gallery-footer strong{font-size:12px}
+.dentist-gallery-footer span{color:var(--muted);font-size:9px}
+.dentist-gallery-footer>div:last-child{display:flex;gap:8px}
+
+.dentist-preview-dialog{position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;width:min(1120px,94vw);height:min(850px,90vh);background:#080808;box-shadow:0 30px 100px #000}
+.dentist-preview-dialog>.dentist-modal-close{position:absolute;right:14px;top:14px;z-index:2;border-color:#fff4;background:#1119;color:#fff}
+.dentist-preview-dialog img{width:100%;height:100%;min-height:0;object-fit:contain}
+.dentist-preview-dialog>div{display:flex;justify-content:space-between;gap:20px;padding:14px 18px;border-top:1px solid #fff2;color:#fff}
+.dentist-preview-dialog strong{font-size:11px}
+.dentist-preview-dialog span{color:#aaa;font-size:10px}
+
+.dentist-confirm-dialog{position:relative;width:min(460px,94vw);padding:30px;background:var(--paper);color:var(--ink);box-shadow:0 24px 80px #0008}
+.dentist-confirm-dialog h2{margin:8px 0 12px;font-size:25px;letter-spacing:-.045em}
+.dentist-confirm-dialog>p:not(.panel-index){margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+.dentist-confirm-dialog>div{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}
+.dentist-danger-button{border:1px solid #a92f2f;background:#a92f2f;color:#fff}
+
+@media(max-width:1050px){
+  .dentist-shell.is-report-active{grid-template-columns:270px minmax(0,1fr);gap:14px}
+  .dentist-report-paper{padding:24px}
+  .dentist-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .dentist-family-report-entry{align-items:flex-start;flex-direction:column;padding:19px}
+  .dentist-family-report-entry>span{width:100%;justify-content:space-between}
+  .dentist-shell.is-report-active{display:block}
+  .dentist-shell.is-report-active .dentist-intake{position:static;max-height:none;padding:20px 0 25px;background:none;border:0;border-bottom:1px solid var(--rule)}
+  .dentist-shell.is-report-active.is-mobile-report:not(.is-mobile-editing) .dentist-intake{display:none}
+  .dentist-shell.is-report-active.is-mobile-report.is-mobile-editing .dentist-report{display:none}
+  .dentist-mobile-switch{display:inline-flex}
+  .dentist-report-frame{padding:7px;margin:0 -7px}
+  .dentist-report-paper{min-height:0;padding:20px 16px 28px}
+  .dentist-report-head{align-items:flex-start;flex-direction:column}
+  .dentist-report-actions{justify-content:flex-start}
+  .dentist-verdict{grid-template-columns:100px minmax(0,1fr)}
+  .dentist-verdict strong{font-size:22px;white-space:nowrap}
+  .dentist-verdict>p{min-width:0;overflow-wrap:anywhere}
+  .dentist-gallery-dialog{width:100vw;height:100dvh}
+  .dentist-modal{padding:0}
+  .dentist-gallery-head{padding:18px}
+  .dentist-gallery-head h2{font-size:23px}
+  .dentist-gallery-filters{display:grid;grid-template-columns:1fr 1fr;padding:10px 18px}
+  .dentist-gallery-filters select{min-width:0;width:100%}
+  .dentist-gallery-filters .text-button{margin-left:0}
+  .dentist-gallery-scroll{padding:15px 18px}
+  .dentist-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .dentist-gallery-card-meta small{white-space:normal}
+  .dentist-gallery-footer{padding:12px 18px}
+  .dentist-gallery-footer>div:last-child .button{padding-left:11px;padding-right:11px}
+  .dentist-preview{padding:0}
+  .dentist-preview-dialog{width:100vw;height:100dvh}
+}
+@media(max-width:420px){
+  .dentist-gallery-grid{grid-template-columns:1fr}
+  .dentist-gallery-select{aspect-ratio:16/11}
+  .dentist-gallery-footer>div:first-child span{display:none}
+}
+@media print{
+  .dentist-report-frame{padding:0;box-shadow:none;background:none}
+  .dentist-report-paper{padding:0}
+}

@@ -1,0 +1,17 @@
+{
+  "task": "single-class tooth instance segmentation",
+  "architecture": "YOLO11s-seg",
+  "weight_file": "models/tooth_instance_best.pt",
+  "training_image_size": 1024,
+  "epochs": 200,
+  "optimizer": "AdamW",
+  "best_recorded_epoch_by_mask_map50": 77,
+  "validation_metrics_at_that_epoch": {
+    "mask_precision": 0.91336,
+    "mask_recall": 0.92111,
+    "mask_map50": 0.96395,
+    "mask_map50_95": 0.81238,
+    "box_map50": 0.96217
+  },
+  "notice": "Metrics are from the existing local validation split and are not clinical performance guarantees."
+}

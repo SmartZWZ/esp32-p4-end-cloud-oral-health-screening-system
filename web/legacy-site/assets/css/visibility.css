@@ -1,0 +1,18 @@
+[hidden] {
+  display: none !important;
+}
+
+.dentist-main-image.is-missing::after {
+  content: "原始影像已被用户删除，报告文字仍保留";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #aaa;
+  font: 11px ui-monospace, monospace;
+  letter-spacing: .06em;
+}
+
+.dentist-main-image.is-missing img {
+  display: none;
+}

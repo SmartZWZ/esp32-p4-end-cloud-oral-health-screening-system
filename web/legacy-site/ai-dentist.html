@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN" data-page="ai-dentist" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>AI牙医 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/visibility.css">
+  <link rel="stylesheet" href="assets/css/ai-dentist.css?v=20260726-gallery">
+  <link rel="stylesheet" href="assets/css/ai-dentist-gallery.css?v=20260727-family-report-entry">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+<nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a class="active" href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button>
+    <button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main dentist-main">
+    <section class="dentist-head">
+      <div>
+        <p class="kicker">VISUAL ORAL SCREENING</p>
+        <h1>AI牙医</h1>
+        <p>把多角度口腔照片放到同一张观察台，由视觉模型整理可见表现、风险和下一步建议。</p>
+      </div>
+      <div class="dentist-head-actions">
+        <span id="dentist-quota">今日额度 —</span>
+        <a class="button button-plain" href="family-reports.html">口腔综合报告</a>
+        <button id="dentist-new" class="button button-plain" type="button">新建分析</button>
+        <a class="button button-plain" data-admin-only hidden href="ai-dentist-admin.html">管理后台</a>
+      </div>
+    </section>
+
+    <a class="dentist-family-report-entry" href="family-reports.html">
+      <div>
+        <p class="panel-index">FAMILY ORAL REVIEW</p>
+              <h2>口腔综合报告</h2>
+        <p>自动读取所选成员最近最多 6 张照片，逐张生成独立观察，再汇总全部本地模型结果。</p>
+      </div>
+      <span>开始生成 <i aria-hidden="true">→</i></span>
+    </a>
+
+    <section class="dentist-shell">
+      <aside class="dentist-intake" aria-label="分析准备">
+        <header class="dentist-intake-head">
+          <div><p class="panel-index">CASE INTAKE</p><h2>准备本次观察</h2></div>
+          <button id="dentist-view-report" class="text-button dentist-mobile-switch" type="button" hidden>查看报告</button>
+        </header>
+        <form id="dentist-form">
+          <label class="dentist-field">
+            <span>家庭成员</span>
+            <select id="dentist-member" required><option value="">请选择成员</option></select>
+          </label>
+          <div class="dentist-field dentist-image-field">
+            <div class="dentist-field-line"><span>口腔照片</span><small id="dentist-selection-count">已选 0 张</small></div>
+            <div id="dentist-selected-images" class="dentist-selected-images">
+              <p>选择成员后，从影像库中挑选本次需要观察的照片。</p>
+            </div>
+            <button id="dentist-open-gallery" class="dentist-gallery-trigger" type="button" disabled>
+              <span><strong>选择照片</strong><small>打开该成员的完整影像库</small></span>
+              <i aria-hidden="true">↗</i>
+            </button>
+            <div class="dentist-image-actions">
+              <label class="dentist-upload-button" for="dentist-upload-input">从本地上传</label>
+              <input id="dentist-upload-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+              <a href="detections.html">打开影像管理</a>
+            </div>
+          </div>
+          <label class="dentist-field">
+            <span>症状或想了解的问题 <small>选填</small></span>
+            <textarea id="dentist-symptoms" maxlength="2000" placeholder="例如：右下后牙咬东西时酸痛一周；也可以不填写，直接分析照片。"></textarea>
+          </label>
+          <label class="dentist-history-toggle">
+            <input id="dentist-use-history" type="checkbox" checked>
+            <span><strong>参考该成员历史记录</strong><small>只读取当前成员最近的影像和检测摘要</small></span>
+          </label>
+          <label class="dentist-history-toggle">
+            <input id="dentist-use-local-results" type="checkbox" checked>
+            <span><strong>参考现有本地模型结果</strong><small>如所选图片已有检测结果，将其作为辅助线索而非最终结论</small></span>
+          </label>
+          <p id="dentist-form-message" class="dentist-message" role="status" aria-live="polite"></p>
+          <button id="dentist-analyze" class="button button-fill dentist-analyze" type="submit">开始AI辅助分析</button>
+        </form>
+        <div class="dentist-past">
+          <div class="dentist-past-head"><span>历史报告</span><button id="dentist-refresh" class="text-button" type="button">刷新</button></div>
+          <div class="dentist-session-filters">
+            <input id="dentist-session-search" type="search" placeholder="搜索报告标题">
+            <select id="dentist-session-member" aria-label="按成员筛选"><option value="">全部成员</option></select>
+            <select id="dentist-session-risk" aria-label="按风险筛选">
+              <option value="">全部风险</option>
+              <option value="low">低风险</option>
+              <option value="medium">中等风险</option>
+              <option value="high">较高风险</option>
+              <option value="unknown">无法判断</option>
+            </select>
+            <select id="dentist-session-date" aria-label="按日期筛选">
+              <option value="">全部时间</option>
+              <option value="7">最近 7 天</option>
+              <option value="30">最近 30 天</option>
+              <option value="90">最近 90 天</option>
+            </select>
+          </div>
+          <div id="dentist-session-list" class="dentist-session-list"><p>正在读取…</p></div>
+        </div>
+      </aside>
+
+      <section id="dentist-report" class="dentist-report" aria-label="AI牙医分析报告" hidden>
+        <div class="dentist-report-frame">
+          <div class="dentist-report-paper">
+            <header class="dentist-report-head">
+              <div><p class="panel-index">ORAL OBSERVATION REPORT</p><h2 id="dentist-report-title">AI牙医报告</h2></div>
+              <div class="dentist-report-actions">
+                <button id="dentist-edit-case" class="text-button dentist-mobile-switch" type="button">修改照片与症状</button>
+                <button id="dentist-delete-report" class="text-button is-danger" type="button" disabled>删除报告</button>
+                <button id="dentist-download" class="text-button" type="button" disabled>下载报告</button>
+                <button id="dentist-print" class="text-button" type="button" disabled>打印</button>
+              </div>
+            </header>
+
+            <div id="dentist-working" class="dentist-working" hidden>
+              <div class="dentist-scan"><span></span></div>
+              <strong>正在逐张观察口腔照片</strong>
+              <p>模型正在核对图片质量、可见表现与该成员已授权的历史摘要。</p>
+            </div>
+
+            <div id="dentist-report-content" hidden>
+          <section class="dentist-viewer">
+            <div id="dentist-main-image" class="dentist-main-image">
+              <img id="dentist-report-image" alt="本次分析的口腔照片">
+              <div id="dentist-markers" class="dentist-markers"></div>
+            </div>
+            <div id="dentist-report-thumbs" class="dentist-report-thumbs"></div>
+          </section>
+
+          <section class="dentist-verdict">
+            <div><span>综合风险</span><strong id="dentist-risk">—</strong></div>
+            <p id="dentist-summary">—</p>
+          </section>
+
+          <section class="dentist-report-section">
+            <div class="dentist-section-title"><p class="panel-index">IMAGE QUALITY</p><h3>影像质量</h3></div>
+            <div id="dentist-quality" class="dentist-quality"></div>
+          </section>
+
+          <section class="dentist-report-section">
+            <div class="dentist-section-title"><p class="panel-index">VISIBLE FINDINGS</p><h3>可见表现</h3></div>
+            <div id="dentist-findings" class="dentist-findings"></div>
+          </section>
+
+          <section class="dentist-report-section dentist-two-column">
+            <div>
+              <div class="dentist-section-title"><p class="panel-index">NEXT STEP</p><h3>下一步建议</h3></div>
+              <div id="dentist-recommendations" class="dentist-recommendations"></div>
+            </div>
+            <div>
+              <div class="dentist-section-title"><p class="panel-index">LIMITATIONS</p><h3>本次无法判断</h3></div>
+              <ul id="dentist-limitations" class="dentist-limitations"></ul>
+            </div>
+          </section>
+
+          <section class="dentist-follow-up">
+            <div class="dentist-section-title"><p class="panel-index">FOLLOW-UP</p><h3>围绕本次报告继续问</h3></div>
+            <div id="dentist-chat" class="dentist-chat"></div>
+            <form id="dentist-chat-form">
+              <textarea id="dentist-question" maxlength="2000" placeholder="例如：这处可疑表现需要多久内去复查？" required></textarea>
+              <button class="button button-fill" type="submit">发送追问</button>
+            </form>
+            <p id="dentist-chat-message" class="dentist-message" role="status"></p>
+          </section>
+              <p id="dentist-disclaimer" class="dentist-disclaimer">本结果仅用于口腔照片辅助筛查，不替代口腔医生面诊、探诊或影像学检查。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="dentist-photo-modal" class="dentist-modal" hidden role="dialog" aria-modal="true" aria-labelledby="dentist-photo-modal-title">
+    <button class="dentist-modal-backdrop" type="button" data-close-gallery aria-label="关闭照片选择"></button>
+    <section class="dentist-gallery-dialog">
+      <header class="dentist-gallery-head">
+        <div>
+          <p class="panel-index">MEMBER IMAGE LIBRARY</p>
+          <h2 id="dentist-photo-modal-title">选择口腔照片</h2>
+          <p id="dentist-gallery-member">—</p>
+        </div>
+        <button class="dentist-modal-close" type="button" data-close-gallery aria-label="关闭">×</button>
+      </header>
+      <div class="dentist-gallery-filters">
+        <select id="dentist-gallery-source" aria-label="图片来源">
+          <option value="">全部来源</option>
+          <option value="web">网页本地上传</option>
+          <option value="device_archive">设备上传保存</option>
+          <option value="device_detect">设备上传检测</option>
+        </select>
+        <select id="dentist-gallery-status" aria-label="分析状态">
+          <option value="">全部状态</option>
+          <option value="available">尚未完成模型分析</option>
+          <option value="processing">正在分析</option>
+          <option value="completed">已有模型结果</option>
+          <option value="failed">分析失败</option>
+        </select>
+        <select id="dentist-gallery-date" aria-label="上传日期">
+          <option value="">全部日期</option>
+          <option value="7">最近 7 天</option>
+          <option value="30">最近 30 天</option>
+          <option value="90">最近 90 天</option>
+        </select>
+        <button id="dentist-gallery-clear" class="text-button" type="button">清除筛选</button>
+      </div>
+      <div id="dentist-gallery-scroll" class="dentist-gallery-scroll">
+        <div id="dentist-gallery-grid" class="dentist-gallery-grid"></div>
+        <div id="dentist-gallery-state" class="dentist-gallery-state">正在读取照片…</div>
+        <div id="dentist-gallery-sentinel" aria-hidden="true"></div>
+      </div>
+      <footer class="dentist-gallery-footer">
+        <div><strong id="dentist-gallery-count">已选 0/6</strong><span>可跨筛选保留选择</span></div>
+        <div>
+          <button class="button button-plain" type="button" data-close-gallery>取消</button>
+          <button id="dentist-gallery-confirm" class="button button-fill" type="button">使用所选照片</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+
+  <div id="dentist-photo-preview" class="dentist-preview" hidden role="dialog" aria-modal="true" aria-label="照片预览">
+    <button class="dentist-modal-backdrop" type="button" data-close-preview aria-label="关闭预览"></button>
+    <section class="dentist-preview-dialog">
+      <button class="dentist-modal-close" type="button" data-close-preview aria-label="关闭">×</button>
+      <img id="dentist-preview-image" alt="口腔照片大图预览">
+      <div id="dentist-preview-meta"></div>
+    </section>
+  </div>
+
+  <div id="dentist-delete-modal" class="dentist-modal dentist-confirm-modal" hidden role="dialog" aria-modal="true" aria-labelledby="dentist-delete-title">
+    <button class="dentist-modal-backdrop" type="button" data-cancel-delete aria-label="取消删除"></button>
+    <section class="dentist-confirm-dialog">
+      <p class="panel-index">PERMANENT DELETE</p>
+      <h2 id="dentist-delete-title">删除这份历史报告？</h2>
+      <p>报告、围绕报告的追问对话和照片关联会被永久删除。原始照片、已有检测结果及成员资料不会被删除。</p>
+      <div>
+        <button class="button button-plain" type="button" data-cancel-delete>取消</button>
+        <button id="dentist-delete-confirm" class="button dentist-danger-button" type="button">删除报告</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="assets/js/ai-dentist.js?v=20260815-image-editor-v1"></script>
+  <script src="assets/js/app.js?v=20260815-editor-v1"></script>
+</body>
+</html>

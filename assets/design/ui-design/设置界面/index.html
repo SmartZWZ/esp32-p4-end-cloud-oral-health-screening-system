@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="settings-screen" class="screen" aria-label="DentiScope settings">
+      <header class="topbar">
+        <a class="back-control" href="../主界面/index.html" aria-label="Back to home">
+          <img src="assets/back.svg" alt="" />
+        </a>
+        <h1>SETTINGS</h1>
+      </header>
+
+      <nav class="settings-actions" aria-label="Settings categories">
+        <a class="settings-card" href="../WIFI设置页面/设置默认WIFI按钮/wifi-settings.html">
+          <img class="card-icon" src="assets/wifi.svg" alt="" />
+          <span class="card-copy">
+            <span class="card-title">WI-FI</span>
+            <span class="card-description">Network and access point</span>
+          </span>
+        </a>
+
+        <a class="settings-card" href="#volume-dialog">
+          <img class="card-icon" src="assets/volume.svg" alt="" />
+          <span class="card-copy">
+            <span class="card-title">VOLUME</span>
+            <span class="card-description">Sound level and alerts</span>
+          </span>
+        </a>
+
+        <a class="settings-card" href="#display-dialog">
+          <img class="card-icon" src="assets/display.svg" alt="" />
+          <span class="card-copy">
+            <span class="card-title">DISPLAY</span>
+            <span class="card-description">Brightness and screen settings</span>
+          </span>
+        </a>
+      </nav>
+
+      <footer class="brand">DentiScope</footer>
+
+      <section id="volume-dialog" class="modal" aria-label="Volume settings">
+        <a class="modal-backdrop" href="#settings-screen" aria-label="Close volume settings"></a>
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="volume-title">
+          <img class="dialog-icon" src="assets/volume.svg" alt="" />
+          <h2 id="volume-title">VOLUME</h2>
+          <input id="volume-range" class="range-input" type="range" min="0" max="100" value="65" data-setting="volume" aria-label="Volume" />
+          <output class="slider-value" for="volume-range">65%</output>
+          <a class="done-button" href="#settings-screen">DONE</a>
+        </div>
+      </section>
+
+      <section id="display-dialog" class="modal" aria-label="Display brightness settings">
+        <a class="modal-backdrop" href="#settings-screen" aria-label="Close display settings"></a>
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="display-title">
+          <img class="dialog-icon" src="assets/display.svg" alt="" />
+          <h2 id="display-title">DISPLAY</h2>
+          <input id="display-range" class="range-input" type="range" min="0" max="100" value="78" data-setting="displayBrightness" aria-label="Display brightness" />
+          <output class="slider-value" for="display-range">78%</output>
+          <a class="done-button" href="#settings-screen">DONE</a>
+        </div>
+      </section>
+    </main>
+    <script src="settings.js"></script>
+  </body>
+</html>

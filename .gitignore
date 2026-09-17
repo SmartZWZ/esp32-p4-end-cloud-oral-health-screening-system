@@ -5,29 +5,17 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
-*.swo
 
-# Logs and temp files
-*.log
-*.tmp
-*.bak
-*.cache
-tmp/
-temp/
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+private/
 
-# Node/Web
-node_modules/
-dist/
-build/
-.next/
-.vite/
-coverage/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Python/Backend/AI
+# Runtime and build output
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -35,38 +23,40 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
-env/
-.env
-.env.*
-!.env.example
-*.db
-backend/storage/
-
-# ESP-IDF/Firmware
+node_modules/
+dist/
+build/
+.next/
+coverage/
 firmware/**/build/
-firmware/**/sdkconfig.old
 firmware/**/managed_components/
 
-# Data/model artifacts
-ai/datasets/*
-!ai/datasets/.gitkeep
-ai/models/*
-!ai/models/README.md
-!ai/models/edge_risk_yolo11n_320_int8.espdl
-*.onnx
+# Model weights and data
 *.pt
+*.pth
+*.onnx
+*.tflite
+*.espdl
+*.ckpt
+datasets/
+runs/
+artifacts/raw/
+artifacts/outputs/
+
+# Large packages and archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.tar.part*
+!backend/tests/esp32-preview.zip
+
+# Existing small LFS-backed model entrypoints
 !ai/models/cloud_fine_det_best.pt
 !ai/models/edge_risk_best.pt
-*.pth
-*.tflite
-*.bin
-*.espdl
 !ai/models/edge_risk_yolo11n_320_int8.espdl
-outputs/*.info
-outputs/*.json
-ai/models/*.info
-ai/models/*.json
 
-# Generated reports/artifacts
-reports/generated/
-outputs/
+# Clinical and patient-derived media
+web/legacy-site/assets/demo/
+assets/clinical/
+assets/patient/

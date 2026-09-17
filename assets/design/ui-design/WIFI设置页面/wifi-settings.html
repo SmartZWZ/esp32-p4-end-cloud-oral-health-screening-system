@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Wi-Fi Settings</title>
+    <link rel="stylesheet" href="wifi-settings.css" />
+  </head>
+  <body>
+    <main class="wifi-screen" aria-label="DentiScope Wi-Fi settings">
+      <header class="topbar">
+        <button class="back-control" type="button" aria-label="Back">
+          <img src="assets/back.svg" alt="" />
+        </button>
+        <h1>WI-FI</h1>
+      </header>
+
+      <nav class="wifi-actions" aria-label="Wi-Fi options">
+        <button class="wifi-action" type="button" data-action="saved-wifi">
+          <img class="action-icon" src="assets/wifi.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">SAVED WI-FI</span>
+            <span class="action-description">Manage known networks</span>
+          </span>
+        </button>
+
+        <button class="wifi-action" type="button" data-action="add-wifi">
+          <img class="action-icon" src="assets/add.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">ADD NEW WI-FI</span>
+            <span class="action-description">Connect to a new network</span>
+          </span>
+        </button>
+
+        <button class="wifi-action" type="button" data-action="default-wifi">
+          <img class="action-icon" src="assets/check.svg" alt="" />
+          <span class="action-copy">
+            <span class="action-title">SET DEFAULT WI-FI</span>
+            <span class="action-description">Choose network for startup</span>
+          </span>
+        </button>
+      </nav>
+
+      <footer>DentiScope</footer>
+    </main>
+  </body>
+</html>

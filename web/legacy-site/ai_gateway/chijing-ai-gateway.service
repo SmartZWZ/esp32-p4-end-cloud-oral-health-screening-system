@@ -1,0 +1,19 @@
+[Unit]
+Description=Chijing Bailian Realtime Voice Gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www
+Group=www
+WorkingDirectory=/www/wwwroot/8.138.230.100_667/ai_gateway
+Environment=CHIJING_AI_CONFIG=/www/wwwroot/chijing_runtime/ai/bailian.env
+ExecStart=/www/wwwroot/chijing_runtime/ai_gateway_venv/bin/python /www/wwwroot/8.138.230.100_667/ai_gateway/gateway.py
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

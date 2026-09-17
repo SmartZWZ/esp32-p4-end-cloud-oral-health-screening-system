@@ -58,3 +58,17 @@
 2. 公共接口先写到 `shared/api-contracts/` 或 `shared/schemas/`。
 3. 每次提交尽量只包含一个明确任务，例如 `ai: add edge dataset converter`。
 4. 文档、代码和实验记录同步更新，方便后续复现。
+
+
+## Snapshot Import
+
+The `2026-08-30` snapshot has been reorganized into this repository. Source
+code, operational documents, protocols and non-sensitive assets are tracked
+here. Datasets, model weights, validation images and large deployment packages
+are stored externally.
+
+See:
+
+- `docs/architecture/repository-organization.md`
+- `docs/architecture/snapshot-import-summary.md`
+- `artifacts/snapshots/2026-08-30/archive-map.md`

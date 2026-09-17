@@ -1,0 +1,16 @@
+# 宝塔站点配置示例：将 /www/wwwroot/chijing/public 设为站点运行目录。
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+location ~ \.php$ {
+    try_files $uri =404;
+    include fastcgi.conf;
+    fastcgi_pass unix:/tmp/php-cgi-82.sock; # 按宝塔实际 PHP 版本调整
+}
+
+# storage 从不应位于 public 内；若目录配置有误，仍显式禁止访问。
+location ~* /(?:\.env|storage|database|config)/ {
+    deny all;
+}
+

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN" data-page="tooth-detail" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>单牙档案 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/tooth-detail.css?v=20260823-tooth-darkline-v1">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+    <nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a href="detections.html">影像</a><a class="active" href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button><button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main tooth-workbench-main">
+    <div class="tooth-topline">
+      <a id="tooth-back-link" class="tooth-back-link" href="dental-model-demo.html">← 返回牙列模型</a>
+      <span id="archive-badge">七视图测试档案</span>
+    </div>
+
+    <section class="tooth-workbench-hero">
+      <div class="tooth-identity"><span id="tooth-code-mark">—</span><i></i></div>
+      <div>
+        <p class="kicker">SINGLE-TOOTH RECORD · FDI SYSTEM</p>
+        <h1 id="tooth-page-title">正在读取单牙档案</h1>
+        <p id="tooth-page-meta">轮廓、视角与数字处理阶段将在这里汇合。</p>
+      </div>
+      <div class="hero-nav"><a id="tooth-prev-link" href="#">上一颗 <strong>—</strong></a><a id="tooth-next-link" href="#">下一颗 <strong>—</strong></a></div>
+    </section>
+
+    <p id="tooth-page-message" class="tooth-page-message" role="status" aria-live="polite">正在载入档案…</p>
+
+    <section id="tooth-workbench" class="tooth-workbench" hidden>
+      <aside class="tooth-view-sidebar">
+        <header><p class="panel-index">01 / SOURCE VIEWS</p><h2>不同角度</h2><p>只显示编号文件中真实存在的来源，不推断缺失视角。</p></header>
+        <div id="tooth-view-list" class="tooth-view-list"></div>
+        <div class="tooth-position-card">
+          <span>牙位定位</span><div id="tooth-mini-odontogram" class="tooth-mini-odontogram"></div>
+        </div>
+      </aside>
+
+      <section class="tooth-image-lab">
+        <header class="lab-head">
+          <div><p class="panel-index">02 / IMAGE LAB</p><h2 id="lab-view-title">单牙数字影像</h2></div>
+          <div class="lab-mode-switch" role="group" aria-label="显示模式">
+            <button type="button" data-display-mode="tooth">单牙</button>
+            <button type="button" data-display-mode="full">完整图片</button>
+            <button class="active" type="button" data-display-mode="overlay">完整图 + 轮廓</button>
+          </div>
+        </header>
+
+        <div id="tooth-canvas-stage" class="tooth-canvas-stage">
+          <canvas id="tooth-analysis-canvas" aria-label="单牙数字影像处理画布"></canvas>
+          <div class="canvas-readout"><span id="canvas-zoom-value">100%</span><span id="canvas-stage-label">原始单牙</span></div>
+          <div class="canvas-tools">
+            <button type="button" data-canvas-action="zoom-out" aria-label="缩小">−</button>
+            <button type="button" data-canvas-action="reset">复位</button>
+            <button type="button" data-canvas-action="zoom-in" aria-label="放大">＋</button>
+          </div>
+        </div>
+
+        <label id="compare-control" class="compare-control"><span>原始图</span><input id="compare-range" type="range" min="0" max="100" value="46"><span>处理后</span></label>
+        <p class="canvas-help">滚轮缩放 · 拖动平移 · 双击复位 · 对比滑块可查看处理前后边界</p>
+
+        <div class="lab-downloads">
+          <button id="download-current-image" class="button button-plain" type="button">下载当前图像</button>
+          <button id="download-stage-zip" class="button button-plain" type="button">全部阶段 ZIP</button>
+          <button id="download-coordinate-json" class="button button-plain" type="button">轮廓坐标 JSON</button>
+          <button id="start-tooth-correction" class="button button-fill" type="button" hidden>修订这颗牙的标注</button>
+        </div>
+      </section>
+
+      <aside class="tooth-process-panel">
+        <header><p class="panel-index">03 / PROCESSING</p><h2>处理阶段</h2></header>
+        <div id="processing-stage-list" class="processing-stage-list"></div>
+
+        <details class="parameter-panel" open>
+          <summary>处理参数 <span id="processing-source-label">浏览器即时预览</span></summary>
+          <div id="parameter-controls" class="parameter-controls"></div>
+          <label class="check-row"><input id="param-exclude-highlights" type="checkbox" checked><span>排除高光区域</span></label>
+          <div class="parameter-actions"><button id="reset-parameters" type="button">恢复算法默认值</button><span id="parameter-state">默认参数</span></div>
+        </details>
+
+        <section class="darkline-run-card" aria-labelledby="darkline-run-title">
+          <div class="darkline-run-copy">
+            <span id="darkline-run-indicator" class="darkline-run-indicator" aria-hidden="true"></span>
+            <div><strong id="darkline-run-title">浅龋证据检测</strong><p id="darkline-run-status" role="status" aria-live="polite">选择真实牙列视角后，可提交本地 RTX 精确计算。</p></div>
+          </div>
+          <button id="run-shallow-caries" class="button button-fill" type="button">运行浅龋检测</button>
+          <small>参数先在浏览器中即时预览；点击运行后，由本地模型按当前轮廓生成可复核证据层。</small>
+        </section>
+
+        <section class="metric-panel">
+          <div><span>结构候选</span><strong id="metric-candidate-count">0</strong></div>
+          <div><span>最长骨架</span><strong id="metric-skeleton-length">0 px</strong></div>
+          <div><span>平均线宽</span><strong id="metric-line-width">0 px</strong></div>
+          <div><span>轮廓面积</span><strong id="metric-tooth-area">0 px²</strong></div>
+        </section>
+        <p class="metric-notice">结构分数用于候选排序，不是患龋概率。页面结果仅作数字图像处理研究与辅助观察，不构成诊断。</p>
+      </aside>
+    </section>
+
+    <section id="tooth-evidence-section" class="tooth-evidence-section" hidden>
+      <header class="evidence-section-head">
+        <div><p class="panel-index">04 / EVIDENCE LEDGER</p><h2>浅龋暗线证据层</h2><p>处理阶段按钮已切换到本地 RTX 结果。这里保留每一处候选的结构证据，便于逐项复核。</p></div>
+        <div class="evidence-run-meta"><span id="evidence-source-badge">LOCAL RTX</span><strong id="evidence-duration">—</strong></div>
+      </header>
+      <div class="evidence-layer-guide" aria-label="证据层说明">
+        <span>01 单牙轮廓</span><span>02 亮度归一化</span><span>03 暗线响应</span><span>04 候选覆盖</span><span>05 骨架与分叉</span>
+      </div>
+      <div class="evidence-table-wrap">
+        <table class="evidence-table">
+          <thead><tr><th>候选</th><th>结构分数</th><th>骨架长度</th><th>平均线宽</th><th>局部反差</th><th>证据类型</th></tr></thead>
+          <tbody id="tooth-evidence-rows"></tbody>
+        </table>
+        <p id="tooth-evidence-empty" class="tooth-evidence-empty">尚未运行浅龋检测。</p>
+      </div>
+    </section>
+
+    <section id="tooth-empty-state" class="tooth-empty-state" hidden>
+      <strong>本次七视图没有该牙位的编号记录</strong>
+      <p>三维牙列仍保留完整 32 牙位导航，但不会为缺失的牙齿推断照片或处理结果。</p>
+      <a id="tooth-empty-back-link" class="button button-fill" href="dental-model-demo.html">返回牙列选择其他牙齿</a>
+    </section>
+
+    <section id="tooth-history-section" class="tooth-history-section" hidden>
+      <header><p class="panel-index">05 / HISTORY</p><h2>单牙档案时间线</h2><p>当前为独立测试档案；后续每次完整采集会追加到同一 FDI 牙位。</p></header>
+      <article class="history-record"><time id="history-date">—</time><div><strong id="history-title">七视图编号测试档案</strong><p id="history-summary">正在汇总来源视角…</p></div><span>TEST</span></article>
+    </section>
+
+    <p class="medical-note">单牙档案用于逐牙记录与技术路线验证，不构成医疗诊断。牙位映射、轮廓与暗线候选均需由口腔专业人员复核。</p>
+  </main>
+
+  <script src="assets/vendor/jszip/jszip.min.js?v=3.10.1"></script>
+  <script src="assets/js/tooth-detail.js?v=20260823-numbered-datasets-v1"></script>
+  <script src="assets/js/app.js?v=20260814-dental-arch-v1"></script>
+</body>
+</html>

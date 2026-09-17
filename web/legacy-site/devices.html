@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN" data-page="devices" data-protected="true">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>设备 — 齿镜</title>
+<link rel="icon" href="cj.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/refine.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<link rel="stylesheet" href="assets/css/polish.css">
+</head>
+<body>
+<header class="site-header">
+<a class="wordmark" href="dashboard.html">
+<img src="cj.svg" alt="齿镜">
+<span class="brand-name">齿镜<small>DentiScope</small>
+</span>
+</a>
+<nav>
+<a href="dashboard.html">概览</a>
+<a class="active" href="devices.html">设备</a>
+<a href="members.html">成员</a>
+<a href="detections.html">影像</a>
+<a href="dental-model-demo.html">牙列模型</a>
+<a href="ai-dentist.html">AI牙医</a>
+<a href="assistant.html">助手</a>
+</nav>
+<button class="theme-toggle" type="button">切换主题</button>
+<button class="logout-button" type="button">退出</button>
+</header>
+<main class="app-main">
+<section class="page-head">
+<div>
+<p class="kicker">DEVICE ACCESS</p>
+<h1>设备</h1>
+</div>
+<div class="page-actions"><a href="device-assistant.html" class="button button-plain">设备对话记录</a><button id="open-bind" class="button button-fill">绑定设备</button></div>
+</section>
+<section class="paper-block">
+<div class="block-head">
+<p>已绑定设备</p>
+<span id="device-total">—</span>
+</div>
+<div id="device-list" class="device-table">
+<p>正在读取设备…</p>
+</div>
+</section>
+<p class="medical-note">设备联网后会从网页账户读取当前家庭成员列表；请在设备屏幕选择成员后再采集。网页服务地址：<code>https://wwwxsh.cn/api/process.php</code>。</p>
+</main>
+<dialog id="bind-dialog" class="modal">
+<form id="bind-form">
+<p class="panel-index">设备 / 输入设备码</p>
+<h2>绑定齿镜设备</h2>
+<p>请在 ESP32-P4 显示屏查看设备码。设备码不会定时刷新，绑定成功后才会由设备自动更新。</p>
+<label>设备码<input name="device_code" placeholder="CJ-7H4K-9M2Q-F8RX" maxlength="40" autocomplete="off" autocapitalize="characters" required>
+</label>
+<label>设备名称<input name="display_name" value="我的齿镜" maxlength="64" required>
+</label>
+<p id="bind-message" class="form-message">
+</p>
+<div class="modal-actions">
+<button type="button" class="button button-plain close-dialog">取消</button>
+<button class="button button-fill" type="submit">确认绑定</button>
+</div>
+</form>
+</dialog>
+<dialog id="bind-status-dialog" class="modal">
+<section>
+<p class="panel-index">设备 / 联动中</p>
+<h2 id="bind-status-title">等待设备确认</h2>
+<p id="bind-status-message">请保持 ESP32-P4 联网。设备会自动完成设备码更新与令牌保存。</p>
+<p id="bind-status-detail" class="form-message">
+</p>
+<div class="modal-actions">
+<button id="close-bind-status" class="button button-fill" type="button">后台等待</button>
+</div>
+</section>
+</dialog>
+<script src="assets/js/app.js?v=20260812-diagnostics">
+</script>
+</body>
+</html>

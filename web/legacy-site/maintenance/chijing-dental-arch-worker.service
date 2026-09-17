@@ -1,0 +1,17 @@
+[Unit]
+Description=Chijing seven-view dental arch visual review worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/www/wwwroot/8.138.230.100_667
+ExecStart=/www/server/php/80/bin/php /www/wwwroot/8.138.230.100_667/maintenance/dental_arch_worker.php --loop
+Restart=always
+RestartSec=5
+User=www
+Group=www
+Environment=CHIJING_AI_CONFIG=/www/wwwroot/chijing_runtime/ai/bailian.env
+
+[Install]
+WantedBy=multi-user.target

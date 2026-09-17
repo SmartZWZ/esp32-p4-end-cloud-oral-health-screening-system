@@ -1,0 +1,147 @@
+:root {
+  --screen-width: 720px;
+  --screen-height: 1080px;
+  --background: #0b0b0b;
+  --ink: #f5f4f1;
+  --muted-ink: #aaaaa8;
+  --rule: #565655;
+  --button-ink: #111110;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: var(--screen-width);
+  min-height: var(--screen-height);
+  margin: 0;
+  background: var(--background);
+}
+
+body {
+  display: grid;
+  place-items: start center;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.screen {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  overflow: hidden;
+  background: var(--background);
+}
+
+/* Matches the clock placement in styles.css exactly. */
+.clock {
+  position: absolute;
+  top: 220px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.time,
+.date,
+.failure-panel h1 {
+  margin: 0;
+}
+
+.time {
+  font-size: 80px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+.time span {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  vertical-align: 10px;
+}
+
+.date {
+  margin-top: 18px;
+  color: var(--muted-ink);
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 0.4px;
+}
+
+.failure-panel {
+  position: absolute;
+  top: 560px;
+  left: 50%;
+  width: 430px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.failure-panel h1 {
+  color: var(--muted-ink);
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.4px;
+}
+
+.action {
+  display: grid;
+  width: 100%;
+  height: 80px;
+  border-radius: 14px;
+  place-items: center;
+  cursor: pointer;
+  font: 500 28px/1 "Aptos", "Segoe UI", Arial, sans-serif;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+}
+
+.action-primary {
+  margin-top: 39px;
+  border: 0;
+  background: var(--ink);
+  color: var(--button-ink);
+}
+
+.action-secondary {
+  margin-top: 24px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+}
+
+.action:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 5px;
+}
+
+.action-primary:active {
+  background: #d7d6d3;
+}
+
+.action-secondary:active {
+  background: #222221;
+}
+
+.brand {
+  position: absolute;
+  right: 61px;
+  bottom: 32px;
+  left: 61px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted-ink);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  text-align: center;
+}

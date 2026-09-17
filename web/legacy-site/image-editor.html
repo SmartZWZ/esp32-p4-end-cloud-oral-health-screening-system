@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-page="image-editor" data-protected="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>查看与编辑 · 齿镜</title>
+  <link rel="icon" href="cj.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/refine.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/image-editor.css?v=20260815-v1">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="dashboard.html"><img src="cj.svg" alt="齿镜"><span class="brand-name">齿镜<small>DentiScope</small></span></a>
+    <nav><a href="dashboard.html">概览</a><a href="devices.html">设备</a><a href="members.html">成员</a><a class="active" href="detections.html">影像</a><a href="dental-model-demo.html">牙列模型</a><a href="ai-dentist.html">AI牙医</a><a href="assistant.html">助手</a></nav>
+    <button class="theme-toggle" type="button">切换主题</button><button class="logout-button" type="button">退出</button>
+  </header>
+
+  <main class="app-main image-editor-main">
+    <section class="image-editor-head">
+      <div><a id="image-editor-back" class="image-editor-back" href="detections.html">← 返回影像</a><p class="kicker">IMAGE REVIEW / NON-DESTRUCTIVE EDIT</p><h1>查看与编辑</h1><p id="image-editor-meta">正在读取图片信息…</p></div>
+      <div class="image-editor-head-actions"><button id="image-editor-reset" class="button button-plain" type="button" disabled>重置本次修改</button><button id="image-editor-download" class="button button-plain" type="button" disabled>下载当前效果</button><button id="image-editor-save" class="button button-fill" type="button" disabled>保存修改</button></div>
+    </section>
+
+    <p id="image-editor-message" class="image-editor-message" role="status" aria-live="polite"></p>
+
+    <section class="image-editor-workbench" aria-label="图片编辑工作台">
+      <div class="image-editor-canvas-panel">
+        <header class="image-editor-stage-head">
+          <div class="image-editor-stages" role="tablist" aria-label="处理阶段">
+            <button class="is-active" type="button" data-editor-stage="original" role="tab" aria-selected="true">原图</button>
+            <button type="button" data-editor-stage="candidate" role="tab" aria-selected="false">白色候选</button>
+            <button type="button" data-editor-stage="mask" role="tab" aria-selected="false">边缘确认</button>
+            <button type="button" data-editor-stage="final" role="tab" aria-selected="false">最终效果</button>
+          </div>
+          <div class="image-editor-zoom" aria-label="缩放工具"><button type="button" data-editor-zoom="out" aria-label="缩小">−</button><output id="image-editor-zoom-value">100%</output><button type="button" data-editor-zoom="in" aria-label="放大">＋</button><button type="button" data-editor-zoom="fit">适应</button></div>
+        </header>
+        <div id="image-editor-viewport" class="image-editor-viewport" tabindex="0" aria-label="图片画布，可滚轮缩放并拖动查看">
+          <canvas id="image-editor-canvas" aria-label="口腔图片编辑画布"></canvas>
+          <div id="image-editor-loading" class="image-editor-loading"><span></span><strong>正在准备原图</strong></div>
+        </div>
+        <footer class="image-editor-stage-foot"><span id="image-editor-stage-label">原始画面</span><span>滚轮缩放 · 拖动查看 · 双击恢复</span></footer>
+      </div>
+
+      <aside class="image-editor-tools" aria-label="编辑工具">
+        <section>
+          <p class="panel-index">GEOMETRY</p><h2>方向与角度</h2>
+          <button id="image-editor-mirror" class="image-editor-tool-action" type="button"><span>↔</span><div><strong>左右镜像</strong><small>沿垂直轴翻转整张图片</small></div><i id="image-editor-mirror-state">未应用</i></button>
+          <div class="image-editor-rotate-buttons"><button type="button" data-editor-rotate="-90">向左 90°</button><button type="button" data-editor-rotate="0">归零</button><button type="button" data-editor-rotate="90">向右 90°</button></div>
+          <label class="image-editor-range"><span>精确旋转角度 <output id="image-editor-rotation-value">0°</output></span><input id="image-editor-rotation" type="range" min="-180" max="180" value="0" step="1"></label>
+        </section>
+
+        <section>
+          <p class="panel-index">REFLECTOR REMOVAL</p><h2>去除周围反光材料</h2>
+          <p>仅检测与画面边缘相连的白色或青白色材料，并将其替换为纯黑色；不会生成或补绘牙齿内容。</p>
+          <button id="image-editor-reflector" class="image-editor-tool-action" type="button"><span>◐</span><div><strong>自动识别并去除</strong><small>使用交付版传统图像处理流程</small></div><i id="image-editor-reflector-state">未应用</i></button>
+          <div class="image-editor-reflector-facts"><span>识别模式<strong id="image-editor-profile">—</strong></span><span>遮罩占比<strong id="image-editor-coverage">—</strong></span><span>处理尺寸<strong id="image-editor-process-size">—</strong></span></div>
+          <details class="image-editor-advanced">
+            <summary>高级识别参数</summary>
+            <label><span>最低亮度 <output data-value-for="brightness">145</output></span><input name="brightness" type="range" min="80" max="240" value="145" step="1"></label>
+            <label><span>最大饱和度 <output data-value-for="saturation">155</output></span><input name="saturation" type="range" min="20" max="255" value="155" step="1"></label>
+            <label><span>青白偏色 <output data-value-for="blueBias">-12</output></span><input name="blueBias" type="range" min="-80" max="80" value="-12" step="1"></label>
+            <label><span>断点连接 <output data-value-for="closeSize">19</output></span><input name="closeSize" type="range" min="3" max="45" value="19" step="2"></label>
+            <label><span>黑色覆盖扩张 <output data-value-for="padding">28</output></span><input name="padding" type="range" min="0" max="60" value="28" step="1"></label>
+            <button id="image-editor-reprocess" class="button button-plain" type="button">按当前参数重新识别</button>
+          </details>
+        </section>
+
+        <section class="image-editor-safety">
+          <p class="panel-index">SAVE BEHAVIOUR</p><h2>保存说明</h2>
+          <p>保存会创建新的修订文件，旧文件暂时保留。改变方向、角度或画面内容后，原模型标注可能失效，需要重新分析。</p>
+          <div><span>当前状态</span><strong id="image-editor-dirty">尚未修改</strong></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script src="assets/js/image-editor.js?v=20260815-v1"></script>
+  <script src="assets/js/app.js?v=20260815-editor-v1"></script>
+</body>
+</html>
+

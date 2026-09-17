@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DentiScope Capture</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="capture-screen" aria-label="DentiScope dental capture">
+      <header class="capture-header">
+        <button id="back-control" class="back-control" type="button" aria-label="Go back">
+          <img src="assets/back.svg" alt="" />
+        </button>
+
+        <div class="header-selects" aria-label="Capture settings">
+          <label class="header-select member-select">
+            <span>MEMBER</span>
+            <select id="member-select" aria-label="Select member">
+              <option>ALEX CHEN</option>
+              <option>JAMIE LI</option>
+              <option>TAYLOR WU</option>
+            </select>
+            <img src="assets/chevron-down.svg" alt="" />
+          </label>
+
+          <label class="header-select capture-mode-select">
+            <span>CAPTURE MODE</span>
+            <select id="capture-mode-select" aria-label="Select capture mode">
+              <option value="single" selected>SINGLE IMAGE</option>
+              <option value="full-mouth">FULL MOUTH</option>
+            </select>
+            <img src="assets/chevron-down.svg" alt="" />
+          </label>
+        </div>
+      </header>
+
+      <section class="viewfinder" aria-label="Dental camera preview">
+        <video id="camera-preview" autoplay muted playsinline></video>
+        <canvas id="captured-frame" width="720" height="720" hidden></canvas>
+        <div class="preview-fallback" aria-live="polite">
+          <span>CAMERA PREVIEW</span>
+          <small>Allow camera access to begin</small>
+        </div>
+        <p id="capture-status" class="capture-status"><span></span>LIVE</p>
+      </section>
+
+      <section class="control-area" aria-label="Capture controls">
+        <button id="capture-button" class="capture-button" type="button">
+          <img src="assets/camera.svg" alt="" />
+          <span>CAPTURE</span>
+        </button>
+
+        <div id="captured-actions" class="captured-actions" hidden>
+          <button id="start-detection" class="detect-button" type="button">START DETECTION</button>
+          <button id="upload-cloud" class="upload-button" type="button">
+            <img src="assets/cloud-upload.svg" alt="" />
+            <span>UPLOAD TO CLOUD</span>
+          </button>
+        </div>
+
+        <section id="result-panel" class="result-panel" aria-label="Detection result" hidden>
+          <button id="play-voice" class="voice-button" type="button" aria-label="Play result voice">
+            <img src="assets/speaker.svg" alt="" />
+            <span id="voice-label">PLAY VOICE</span>
+          </button>
+          <div class="result-copy">
+            <h2>DETECTION RESULT</h2>
+            <p>ANALYSIS COMPLETE</p>
+            <p>RESULT READY FOR REVIEW</p>
+          </div>
+          <button id="close-result" class="close-result" type="button">
+            <span>CLOSE RESULT</span>
+            <img src="assets/close.svg" alt="" />
+          </button>
+        </section>
+      </section>
+
+      <p id="upload-notice" class="upload-notice" role="status" hidden>UPLOADED TO CLOUD</p>
+
+      <section id="detection-modal" class="modal" aria-label="Choose detection mode" aria-hidden="true">
+        <button id="modal-backdrop" class="modal-backdrop" type="button" aria-label="Close detection choices"></button>
+        <div class="mode-dialog" role="dialog" aria-modal="true" aria-labelledby="mode-title">
+          <h1 id="mode-title">CHOOSE DETECTION</h1>
+          <p id="detection-mode-description">Choose where the analysis runs.</p>
+          <div class="mode-options">
+            <button class="mode-option" type="button" data-mode="on-device">
+              <img src="assets/chip.svg" alt="" />
+              <span><strong>ON-DEVICE</strong><small>Private local analysis</small></span>
+            </button>
+            <button class="mode-option" type="button" data-mode="cloud">
+              <img src="assets/cloud.svg" alt="" />
+              <span><strong>CLOUD</strong><small>Enhanced cloud analysis</small></span>
+            </button>
+            <button class="mode-option" type="button" data-mode="hybrid">
+              <img src="assets/hybrid-analysis.svg" alt="" />
+              <span><strong>ON-DEVICE + CLOUD</strong><small>Local and cloud analysis</small></span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="capture-flow.js"></script>
+  </body>
+</html>

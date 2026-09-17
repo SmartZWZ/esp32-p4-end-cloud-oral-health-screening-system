@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>齿镜系统结构图 - 组件式效果预览</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{overflow:hidden;background:#eceff3;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#23262b}
+    .stage{
+      position:absolute;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;
+      background:
+        radial-gradient(circle at 50% 47%,rgba(51,121,230,.065),transparent 26%),
+        linear-gradient(#fff,#fff)
+    }
+    .title{position:absolute;left:58px;top:38px;z-index:5}
+    .title h1{margin:0;font-size:37px;letter-spacing:-1px}.title p{margin:9px 0 0;color:#73777e;font-size:15px}
+    .component{position:absolute;z-index:3;text-align:center}
+    .component h2{margin:10px 0 0;font-size:31px;line-height:1.2;letter-spacing:-1px}
+    .component p{margin:9px 0 0;color:#6e737a;font-size:15px}
+    .art{display:grid;place-items:center;margin:auto;filter:drop-shadow(0 15px 18px rgba(20,27,38,.12))}
+    .hardware{left:72px;top:176px;width:400px}
+    .hardware .art{width:390px;height:260px}
+    .web{left:115px;top:700px;width:390px}
+    .web .art{width:330px;height:210px}
+    .cloud{left:725px;top:282px;width:510px}
+    .cloud .art{width:490px;height:330px}
+    .ai{left:1430px;top:175px;width:420px}
+    .ai .art{width:410px;height:285px}
+    .data{left:1450px;top:700px;width:370px}
+    .data .art{width:300px;height:210px}
+    .badge-row{display:flex;justify-content:center;gap:9px;margin-top:13px}
+    .badge{padding:6px 10px;border-radius:15px;background:#f0f3f7;color:#555d68;font-size:12px;font-weight:700}
+    .badge.blue{background:#e7f0ff;color:#2566b7}.badge.purple{background:#eee9f9;color:#6649aa}.badge.green{background:#e4f4eb;color:#247852}
+    .flows{position:absolute;inset:0;z-index:2;width:1920px;height:1080px}
+    .flow-label{
+      position:absolute;z-index:4;padding:8px 14px;border-radius:7px;background:#fff;
+      box-shadow:0 5px 16px rgba(20,27,38,.08);font-size:18px;font-weight:750;white-space:nowrap
+    }
+    .f-hardware{left:491px;top:305px}.f-control{left:478px;top:522px}
+    .f-web{left:523px;top:712px}.f-ai{left:1235px;top:310px}.f-data{left:1230px;top:700px}
+    .flow-label small{display:block;margin-top:4px;color:#7a7f87;font-size:12px;font-weight:500}
+    .legend{position:absolute;left:60px;bottom:37px;z-index:4;display:flex;gap:32px;color:#70757d;font-size:13px}
+    .legend span{display:flex;align-items:center;gap:8px}.legend i{width:31px;border-top:3px solid #30343a}
+    .legend .dash{border-top-style:dashed}.legend .blue{border-color:#3479df}.legend .purple{border-color:#7958c8}.legend .green{border-color:#24865b}
+    .corner{position:absolute;right:58px;bottom:37px;color:#a0a5ac;font:11px Arial,sans-serif;letter-spacing:2px}
+  </style>
+</head>
+<body>
+  <main id="stage" class="stage">
+    <header class="title">
+      <h1>齿镜智能口腔健康系统</h1>
+      <p>设备、网页、云端与 AI 服务之间的信息流</p>
+    </header>
+
+    <section class="component hardware">
+      <div class="art">
+        <svg width="390" height="260" viewBox="0 0 390 260" aria-hidden="true">
+          <defs>
+            <linearGradient id="dev-body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#dfe5ec"/></linearGradient>
+            <linearGradient id="dev-screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#152539"/><stop offset="1" stop-color="#2b4161"/></linearGradient>
+          </defs>
+          <g transform="translate(101 7)">
+            <rect x="36" y="0" width="118" height="155" rx="27" fill="url(#dev-body)" stroke="#1e2733" stroke-width="4"/>
+            <rect x="50" y="17" width="90" height="76" rx="13" fill="url(#dev-screen)"/>
+            <circle cx="95" cy="55" r="25" fill="#e7f0ff" stroke="#4a91ed" stroke-width="4"/>
+            <circle cx="95" cy="55" r="11" fill="#3479df"/>
+            <path d="M70 112h50" stroke="#8a96a5" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="95" cy="136" r="5" fill="#253142"/>
+            <rect x="71" y="154" width="48" height="92" rx="22" fill="url(#dev-body)" stroke="#1e2733" stroke-width="4"/>
+            <path d="M82 174v48M95 174v48M108 174v48" stroke="#a7b1bd" stroke-width="3"/>
+            <path d="M36 35H7M183 35h-29M36 81H0M190 81h-36" stroke="#667485" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="3" cy="35" r="6" fill="#3479df"/><circle cx="187" cy="35" r="6" fill="#3479df"/>
+          </g>
+          <g transform="translate(8 51)">
+            <rect x="0" y="0" width="86" height="64" rx="9" fill="#344050" stroke="#161b22" stroke-width="3"/>
+            <circle cx="43" cy="32" r="23" fill="#10151c" stroke="#7a8795" stroke-width="4"/>
+            <circle cx="43" cy="32" r="10" fill="#6689b8"/>
+            <path d="M9 10h18M59 10h18M9 54h18M59 54h18" stroke="#aab4bf" stroke-width="3"/>
+          </g>
+          <g transform="translate(291 58)">
+            <rect width="81" height="52" rx="8" fill="#fff" stroke="#1e2733" stroke-width="3"/>
+            <path d="M12 15h55M12 26h42M12 37h49" stroke="#3479df" stroke-width="4" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+      <h2>齿镜智能硬件</h2>
+      <p>ESP32-P4 · 摄像头 · 麦克风 · 屏幕 · 扬声器</p>
+    </section>
+
+    <section class="component web">
+      <div class="art">
+        <svg width="330" height="210" viewBox="0 0 330 210" aria-hidden="true">
+          <defs><linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#dfeaf9"/></linearGradient></defs>
+          <rect x="24" y="5" width="282" height="166" rx="12" fill="#283445" stroke="#12171e" stroke-width="4"/>
+          <rect x="35" y="17" width="260" height="142" rx="5" fill="url(#screen)"/>
+          <rect x="35" y="17" width="260" height="24" fill="#fff"/>
+          <circle cx="49" cy="29" r="4" fill="#3479df"/><circle cx="62" cy="29" r="4" fill="#b8c3d0"/>
+          <rect x="51" y="56" width="73" height="74" rx="9" fill="#fff"/>
+          <circle cx="87" cy="83" r="16" fill="#d9e9ff"/><path d="M66 118c4-15 12-22 21-22s17 7 21 22" fill="none" stroke="#3479df" stroke-width="3"/>
+          <rect x="141" y="56" width="137" height="33" rx="8" fill="#3479df"/>
+          <rect x="141" y="101" width="62" height="29" rx="7" fill="#fff"/><rect x="216" y="101" width="62" height="29" rx="7" fill="#fff"/>
+          <path d="M0 172h330l-26 31H26z" fill="#d9dfe7" stroke="#535e6d" stroke-width="3"/>
+          <path d="M125 180h80l-8 12h-64z" fill="#aeb8c5"/>
+        </svg>
+      </div>
+      <h2>齿镜网页端</h2>
+      <p>成员管理 · 影像管理 · 模型工作台 · AI 助手</p>
+    </section>
+
+    <section class="component cloud">
+      <div class="art">
+        <svg width="490" height="330" viewBox="0 0 490 330" aria-hidden="true">
+          <defs>
+            <linearGradient id="cloud-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#eaf3ff"/><stop offset="1" stop-color="#c9dcf6"/></linearGradient>
+            <linearGradient id="rack" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#344155"/><stop offset="1" stop-color="#141a23"/></linearGradient>
+          </defs>
+          <path d="M97 135c-35 0-60-22-60-54s28-56 61-53c15-27 43-43 75-40 34 3 57 21 69 49 33-13 72 7 74 43 36 0 62 24 62 55H97z" fill="url(#cloud-fill)" stroke="#273344" stroke-width="4"/>
+          <g transform="translate(58 128)">
+            <rect x="0" y="0" width="132" height="164" rx="13" fill="url(#rack)" stroke="#0d1117" stroke-width="4"/>
+            <g fill="#222d3a" stroke="#596778" stroke-width="2">
+              <rect x="13" y="14" width="106" height="34" rx="5"/><rect x="13" y="64" width="106" height="34" rx="5"/><rect x="13" y="114" width="106" height="34" rx="5"/>
+            </g>
+            <g fill="#3479df"><circle cx="101" cy="31" r="5"/><circle cx="101" cy="81" r="5"/><circle cx="101" cy="131" r="5"/></g>
+            <g stroke="#4d94ed" stroke-width="4" stroke-linecap="round"><path d="M25 31h36"/><path d="M25 81h36"/><path d="M25 131h36"/></g>
+          </g>
+          <g transform="translate(166 159)">
+            <rect x="0" y="0" width="285" height="164" rx="14" fill="#fff" stroke="#263142" stroke-width="4"/>
+            <rect x="0" y="0" width="285" height="30" rx="13" fill="#263142"/>
+            <circle cx="18" cy="15" r="4" fill="#4e97f0"/><circle cx="33" cy="15" r="4" fill="#738094"/>
+            <rect x="18" y="49" width="249" height="57" rx="8" fill="#dceaff"/>
+            <path d="M30 91l43-28 40 22 38-37 47 43 31-22 27 22" fill="none" stroke="#3479df" stroke-width="5"/>
+            <rect x="18" y="119" width="72" height="28" rx="6" fill="#3479df"/>
+            <rect x="105" y="119" width="72" height="28" rx="6" fill="#e7eef7"/>
+            <rect x="192" y="119" width="75" height="28" rx="6" fill="#e7eef7"/>
+          </g>
+          <g transform="translate(188 43)">
+            <rect width="116" height="58" rx="16" fill="#fff" stroke="#3479df" stroke-width="3"/>
+            <path d="M24 29h68M58 15v28" stroke="#3479df" stroke-width="4" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+      <h2>齿镜云端平台</h2>
+      <p>账号与成员 · 影像任务 · AI 助手 · 设备服务</p>
+    </section>
+
+    <section class="component ai">
+      <div class="art">
+        <svg width="410" height="285" viewBox="0 0 410 285" aria-hidden="true">
+          <defs><linearGradient id="ai-cloud" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#eff5ff"/><stop offset="1" stop-color="#d8e7fa"/></linearGradient></defs>
+          <path d="M86 143c-38 0-64-24-64-57 0-32 26-56 59-56 17-28 46-43 80-38 31 4 51 21 62 46 37-13 76 11 77 48 39 0 67 24 67 57H86z" fill="url(#ai-cloud)" stroke="#283443" stroke-width="4"/>
+          <g transform="translate(118 48)">
+            <circle cx="54" cy="54" r="47" fill="#fff" stroke="#7557c8" stroke-width="3"/>
+            <path d="M34 54c10-17 30-17 40 0-10 17-30 17-40 0z" fill="none" stroke="#7557c8" stroke-width="3"/>
+            <circle cx="54" cy="54" r="10" fill="#7557c8"/>
+          </g>
+          <g transform="translate(58 164)">
+            <circle cx="43" cy="43" r="42" fill="#e7f0ff" stroke="#3479df" stroke-width="3"/>
+            <path d="M18 44c13-19 37-19 50 0-13 19-37 19-50 0z" fill="none" stroke="#3479df" stroke-width="3"/>
+            <circle cx="43" cy="44" r="8" fill="#3479df"/>
+          </g>
+          <g transform="translate(163 164)">
+            <circle cx="43" cy="43" r="42" fill="#eee9f9" stroke="#7557c8" stroke-width="3"/>
+            <path d="M25 43v4M36 35v20M48 29v32M60 36v18" stroke="#7557c8" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(268 164)">
+            <circle cx="43" cy="43" r="42" fill="#e4f4eb" stroke="#24865b" stroke-width="3"/>
+            <path d="M27 24c8-8 24-8 32 0 9 14-3 40-10 45-3-14-9-14-12 0-7-5-19-31-10-45z" fill="#fff" stroke="#24865b" stroke-width="2.5"/>
+          </g>
+        </svg>
+      </div>
+      <h2>AI 智能分析服务</h2>
+      <div class="badge-row"><span class="badge blue">影像模型</span><span class="badge purple">实时语音</span><span class="badge green">AI 牙医</span></div>
+    </section>
+
+    <section class="component data">
+      <div class="art">
+        <svg width="300" height="210" viewBox="0 0 300 210" aria-hidden="true">
+          <defs><linearGradient id="db-fill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f7fa"/><stop offset="1" stop-color="#cfd7e2"/></linearGradient></defs>
+          <ellipse cx="150" cy="40" rx="92" ry="31" fill="#e8edf4" stroke="#303b4b" stroke-width="4"/>
+          <path d="M58 40v118c0 22 41 39 92 39s92-17 92-39V40" fill="url(#db-fill)" stroke="#303b4b" stroke-width="4"/>
+          <path d="M58 84c0 22 41 39 92 39s92-17 92-39M58 126c0 22 41 39 92 39s92-17 92-39" fill="none" stroke="#657284" stroke-width="3"/>
+          <g fill="#3479df"><circle cx="96" cy="71" r="5"/><circle cx="96" cy="113" r="5"/><circle cx="96" cy="155" r="5"/></g>
+          <path d="M115 71h76M115 113h76M115 155h76" stroke="#8995a4" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2>云端数据中心</h2>
+      <p>成员 · 影像 · 检测结果 · 对话记录</p>
+    </section>
+
+    <svg class="flows" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#30343a"/></marker>
+        <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#c56a00"/></marker>
+      </defs>
+      <path d="M457 365H675" fill="none" stroke="#30343a" stroke-width="5" marker-end="url(#arrow)"/>
+      <path d="M775 620L489 785" fill="none" stroke="#30343a" stroke-width="5" marker-end="url(#arrow)"/>
+      <path d="M1230 380H1410" fill="none" stroke="#30343a" stroke-width="5" marker-end="url(#arrow)"/>
+      <path d="M1210 630L1455 778" fill="none" stroke="#30343a" stroke-width="5" marker-end="url(#arrow)"/>
+      <path d="M780 527C675 566 576 568 447 510" fill="none" stroke="#c56a00" stroke-width="4" stroke-dasharray="12 10" marker-end="url(#arrow-orange)"/>
+    </svg>
+
+    <div class="flow-label f-hardware">口腔影像 · 语音数据<small>设备上传到云端</small></div>
+    <div class="flow-label f-control">语音回复 · 设备控制<small>音量、亮度与拍照指令</small></div>
+    <div class="flow-label f-web">成员、图片与操作请求<small>检测结果返回网页展示</small></div>
+    <div class="flow-label f-ai">模型分析 · AI 对话<small>分析结果与语音回复</small></div>
+    <div class="flow-label f-data">用户数据与历史记录<small>统一保存并按账号隔离</small></div>
+
+    <footer class="legend">
+      <span><i></i>业务与数据流</span>
+      <span><i class="dash"></i>设备控制指令</span>
+      <span><i class="blue"></i>影像</span>
+      <span><i class="purple"></i>语音</span>
+      <span><i class="green"></i>分析结果</span>
+    </footer>
+    <div class="corner">DENTISCOPE · SYSTEM OVERVIEW</div>
+  </main>
+  <script>
+    const stage=document.querySelector('#stage');
+    function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(${Math.max(0,(innerWidth-1920*s)/2)/s}px,${Math.max(0,(innerHeight-1080*s)/2)/s}px) scale(${s})`}
+    addEventListener('resize',fit);fit();
+  </script>
+</body>
+</html>
